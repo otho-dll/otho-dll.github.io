@@ -7,5 +7,5 @@ description: "I have made an extensio for Obsidian and in my (subjective) opinio
 image: "/images/blog/handwrittenNotebook/titlePage.png"
 article_tags: ["Blog"]
 hide_image: true
-draft: false
+draft: true
 ---
