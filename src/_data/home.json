@@ -4,9 +4,6 @@
 	"intro": "I design and build electronics, robots and 3D-printed things, and write about how they're made.",
 	"roles": ["Hobby developer", "Student", "Maker", "Mechanic", "Gamer", "Robotics Technician"],
 
-	"welcome": "Welcome to my website!<br>I'm <span class='highlight'>Simon</span> and&nbsp;I&nbsp;am&nbsp;a",
-	"subtext": "Why ANUlab? Because I prefer when my projects are made under some brand.",
-
 	"photo": "/images/Me.jpg",
 	"photoAlt": "Simon with a quadruped robot",
 
@@ -21,19 +18,12 @@
 		}
 	],
 
-	"projectsTitle": "My best Projects yet!",
-
 	"tycho": {
 		"title": "Tycho Project",
 		"text": "Visit the Tycho Project site.",
 		"url": "https://tycho.anulab.tech"
 	},
 
-	"contact": {
-		"intro": "If you have any questions don't hesitate to contact me! I would love to help you",
-		"options": [
-			{ "title": "You can contact me via Discord", "label": "Discord", "value": "glinek_tronic", "action": "copy" },
-			{ "title": "Or by writing an email", "label": "Email", "value": "simon@anulab.tech", "href": "mailto:simon@anulab.tech" }
-		]
-	}
+	"socialIntro": "If you have any questions don't hesitate to contact me! I would love to help you",
+	"discord": "glinek_tronic"
 }

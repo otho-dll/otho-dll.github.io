@@ -2,17 +2,13 @@
 import { initBackground } from './modules/background.js';
 import { initNav } from './modules/nav.js';
 import { initTyping } from './modules/typing.js';
-import { initCarousel } from './modules/carousel.js';
-import { initTitleMarquee } from './modules/title-marquee.js';
-import { initSectionDots } from './modules/section-dots.js';
+import { initTabs } from './modules/tabs.js';
 import { initLightbox } from './modules/lightbox.js';
 import { initCopyButtons } from './modules/copy.js';
 
 initBackground();
 initNav();
 initTyping();
-initCarousel();
-initTitleMarquee();
-initSectionDots();
+initTabs();
 initLightbox();
 initCopyButtons();

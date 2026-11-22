@@ -4,117 +4,137 @@
 	<link rel="stylesheet" href="{{ '/css/home.css' | versioned }}">
 {% endblock %}
 
+{#- One lab log entry: a post, a project, or a project together with its write-up post. -#}
+{% macro logEntry(entry) %}
+	{%- set item = entry.item %}
+	{%- if entry.type == 'post' %}
+		{%- set url = item.url %}{% set linkText = 'Read →' %}{% set external = false %}
+	{%- elif entry.post %}
+		{%- set url = entry.post.url %}{% set linkText = 'Read the write-up →' %}{% set external = false %}
+	{%- elif item.data.show_link and item.data.link %}
+		{%- set url = item.data.link %}{% set external = item.data.link.startsWith('http') %}
+		{%- set linkText = 'View project ↗' if external else 'View project →' %}
+	{%- else %}
+		{%- set url = '' %}
+	{%- endif %}
+	<article class="log-entry log-entry--{{ entry.type }}">
+		{%- if entry.date %}
+		<time class="log-date" datetime="{{ entry.date | isoDate }}">{{ (entry.date | readableDate).slice(0, 6) }}</time>
+		{%- else %}
+		<span class="log-date" aria-hidden="true">—</span>
+		{%- endif %}
+		<div class="log-rail" aria-hidden="true"></div>
+		<div class="log-card">
+			<div class="log-body">
+				<p class="log-meta">
+					{%- if entry.type == 'post' %}<span class="log-type log-type--post">Post</span>
+					{%- else %}<span class="log-type">Project</span>{% if entry.post %}<span class="log-type log-type--post">Post</span>{% endif %}
+					{%- endif %}
+					{%- if entry.date %}<span class="log-date-inline">{{ entry.date | readableDate }}</span>{% endif %}
+				</p>
+				<h4>{{ item.data.title }}</h4>
+				<p class="muted clamp">{{ item.data.description }}</p>
+				{%- if url %}
+				<a class="arrow-link" href="{{ url }}"{% if external %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ linkText }}</a>
+				{%- endif %}
+			</div>
+			{%- if item.data.image %}
+			<img src="{{ item.data.image }}" alt="" sizes="(max-width: 768px) 100vw, 180px">
+			{%- endif %}
+		</div>
+	</article>
+{% endmacro %}
+
 {% block content %}
-<nav class="dot-nav" aria-label="Sections">
-	<a href="#welcome" class="dot active" aria-label="Home"></a>
-	<a href="#about" class="dot" aria-label="About Me"></a>
-	<a href="#projects" class="dot" aria-label="My Projects"></a>
-	<a href="#contact" class="dot" aria-label="Contact Me"></a>
-</nav>
+<div class="home">
+	<div class="bento">
 
-<div class="social-nav-floating">
-	<div class="social-links-vertical">
-		{%- for link in social %}
-		<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="{{ link.name }}">
-			<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="{{ link.icon_path }}"/></svg>
-		</a>
-		{%- endfor %}
-	</div>
-</div>
-
-<div class="home-container">
-
-	<section id="welcome" class="home-section hero-section">
-		<div class="content hero-content">
-			<h1 class="hero-greeting">{{ home.welcome | safe }}</h1>
-
-			{# Roles are typed out by js/typing.js; the first one is rendered for no-JS visitors. #}
-			<h2 class="hero-role" data-roles="{{ home.roles | dump }}">
+		<section class="tile bento-hero" id="welcome">
+			<p class="hero-greeting">{{ home.greeting }}</p>
+			<h1 class="hero-name">{{ home.name }}</h1>
+			{# Roles are typed out by js/modules/typing.js; the first one is rendered for no-JS visitors. #}
+			<p class="hero-role" data-roles="{{ home.roles | dump }}">
 				<span class="typing-text">{{ home.roles[0] }}</span><span class="cursor" aria-hidden="true">|</span>
-			</h2>
-
-			<p class="subtext">{{ home.subtext | safe }}</p>
-
-			<a href="#about" class="learn-more-btn">Learn more <span aria-hidden="true">↓</span></a>
-		</div>
-	</section>
-
-	<section id="about" class="home-section">
-		<div class="content about-container">
-			<div class="about-image-wrapper">
-				<img src="{{ home.photo }}" alt="{{ home.photoAlt }}" class="about-image" sizes="(max-width: 768px) 90vw, 420px">
+			</p>
+			<p class="hero-intro">{{ home.intro }}</p>
+			<div class="hero-actions">
+				<a class="pill-btn pill-btn--solid" href="#projects">Projects <span aria-hidden="true">↓</span></a>
+				<a class="pill-btn" href="/blog/">Blog <span aria-hidden="true">→</span></a>
 			</div>
+		</section>
 
-			<div class="about-content">
-				{%- for block in home.about %}
-				<div class="about-block block-{{ loop.index }}">
-					<h3>{{ block.title }}</h3>
-					<p>{{ block.text }}</p>
-				</div>
-				{%- endfor %}
-			</div>
+		<div class="tile bento-photo">
+			<img src="{{ home.photo }}" alt="{{ home.photoAlt }}" loading="eager" fetchpriority="high" sizes="(max-width: 1024px) 100vw, 400px">
 		</div>
-	</section>
 
-	<section id="projects" class="home-section">
-		<div class="content carousel-container">
-			<h2 class="highlight">{{ home.projectsTitle }}</h2>
-
-			<div class="carousel-track-container">
-				<ul class="carousel-track">
-					{%- for project in collections.project %}
-					<li class="carousel-slide" aria-roledescription="slide" aria-label="{{ loop.index }} of {{ loop.length }}">
-						<article class="project-card">
-							{%- if project.data.image %}
-							<div class="project-image-wrapper">
-								<img src="{{ project.data.image }}" alt="" class="project-image" sizes="(max-width: 768px) 100vw, 540px">
-							</div>
-							{%- endif %}
-							<div class="project-info">
-								<h3>{{ project.data.title }}</h3>
-								<p>{{ project.data.description }}</p>
-								{%- if project.data.show_link and project.data.link %}
-								<a href="{{ project.data.link }}" class="card-btn"{% if project.data.link.startsWith('http') %} target="_blank" rel="noopener noreferrer"{% endif %}>View Project <span aria-hidden="true">→</span></a>
-								{%- endif %}
-							</div>
-						</article>
-					</li>
-					{%- else %}
-					<li>No projects yet.</li>
+		{#- Lab log: one tab per year (js/modules/tabs.js). Without JS all years are listed. -#}
+		{%- set log = collections.labLog %}
+		<section class="tile bento-log" id="projects" aria-labelledby="log-title" data-tabs>
+			<div class="log-head">
+				<h2 class="tile-title" id="log-title">Lab log</h2>
+				<div class="log-tabs" role="tablist" aria-label="Year">
+					{%- for group in log.years %}
+					<button type="button" role="tab" id="log-tab-{{ group.year }}" aria-controls="log-{{ group.year }}" aria-selected="{{ 'true' if loop.first else 'false' }}">{{ group.year }}</button>
 					{%- endfor %}
-				</ul>
-			</div>
-
-			<div class="carousel-dots">
-				{%- for project in collections.project %}
-				<button type="button" class="carousel-dot{% if loop.first %} active{% endif %}" aria-label="Show project {{ loop.index }}: {{ project.data.title }}"></button>
-				{%- endfor %}
-			</div>
-
-			<div class="carousel-controls">
-				<button type="button" class="carousel-arrow left-arrow" aria-label="Previous project">&#10094;</button>
-				<button type="button" class="carousel-arrow right-arrow" aria-label="Next project">&#10095;</button>
-			</div>
-		</div>
-	</section>
-
-	<section id="contact" class="home-section contact-section">
-		<div class="content">
-			<h2 class="highlight">Contact Me</h2>
-			<p class="contact-intro">{{ home.contact.intro }}</p>
-
-			<div class="contact-methods">
-				{%- for option in home.contact.options %}
-				<div class="contact-method">
-					<h3>{{ option.title }}</h3>
-					<div class="contact-box">
-						<code>{{ option.value }}</code>
-					</div>
+					{%- if log.undated.length %}
+					<button type="button" role="tab" id="log-tab-earlier" aria-controls="log-earlier" aria-selected="false">Earlier</button>
+					{%- endif %}
 				</div>
+			</div>
+
+			{%- for group in log.years %}
+			<div class="log-panel" role="tabpanel" id="log-{{ group.year }}" aria-labelledby="log-tab-{{ group.year }}">
+				<h3 class="log-year">{{ group.year }}</h3>
+				{%- for entry in group.entries %}
+				{{ logEntry(entry) }}
 				{%- endfor %}
 			</div>
-		</div>
-	</section>
+			{%- endfor %}
 
+			{%- if log.undated.length %}
+			<div class="log-panel" role="tabpanel" id="log-earlier" aria-labelledby="log-tab-earlier">
+				<h3 class="log-year">Earlier</h3>
+				{%- for project in log.undated %}
+				{{ logEntry({ type: 'project', item: project }) }}
+				{%- endfor %}
+			</div>
+			{%- endif %}
+		</section>
+
+		{%- for block in home.about %}
+		<section class="tile bento-about"{% if loop.first %} id="about"{% endif %}>
+			<h2 class="tile-title">{{ block.title }}</h2>
+			<p class="muted">{{ block.text }}</p>
+		</section>
+		{%- endfor %}
+
+		<a class="tile tile--link bento-tycho" href="{{ home.tycho.url }}" target="_blank" rel="noopener noreferrer">
+			<p class="tile-label">Side project</p>
+			<strong>{{ home.tycho.title }}</strong>
+			<p class="muted">{{ home.tycho.text }}</p>
+			<span class="arrow-link">Visit ↗</span>
+		</a>
+
+		<section class="tile bento-social" id="contact">
+			<h2 class="tile-title">Social</h2>
+			<p class="muted">{{ home.socialIntro }}</p>
+			<div class="social-links">
+				<button type="button" class="social-link" data-copy="{{ home.discord }}" aria-label="Copy Discord username {{ home.discord }}">
+					<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+					<span class="social-link-text"><span class="social-link-name">Discord</span><span data-copy-label>{{ home.discord }}</span></span>
+					<span class="social-link-hint" aria-hidden="true">copy</span>
+				</button>
+				{%- for link in social %}
+				{%- set external = link.url.startsWith('http') %}
+				<a class="social-link" href="{{ link.url }}"{% if external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+					<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="{{ link.icon_path }}"/></svg>
+					<span class="social-link-text"><span class="social-link-name">{{ link.name }}</span><span>{{ link.handle }}</span></span>
+					<span class="social-link-hint" aria-hidden="true">↗</span>
+				</a>
+				{%- endfor %}
+			</div>
+		</section>
+
+	</div>
 </div>
 {% endblock %}
