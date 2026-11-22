@@ -261,7 +261,7 @@
 
 /* =========================================
    ABOUT
-   Photo on the left (cross-fading slides), two text blocks offset in opposite directions.
+   Photo on the left, two text blocks offset in opposite directions.
 ========================================= */
 .home-section .about-container {
     flex-direction: row;
@@ -282,20 +282,11 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-/* All slides share one grid cell and fade between each other (js/modules/about-slider.js). */
-.about-slide {
+.about-image {
     display: block;
-    grid-area: 1 / 1;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-}
-
-.about-slide.active {
-    z-index: 2;
-    opacity: 1;
 }
 
 .about-content {

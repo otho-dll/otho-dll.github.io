@@ -26,14 +26,14 @@
 
 	<section id="welcome" class="home-section hero-section">
 		<div class="content hero-content">
-			<h1 class="hero-greeting">{{ welcome_text | safe }}</h1>
+			<h1 class="hero-greeting">{{ home.welcome | safe }}</h1>
 
 			{# Roles are typed out by js/typing.js; the first one is rendered for no-JS visitors. #}
-			<h2 class="hero-role" data-roles="{{ dynamic_texts | dump }}">
-				<span class="typing-text">{{ dynamic_texts[0] }}</span><span class="cursor" aria-hidden="true">|</span>
+			<h2 class="hero-role" data-roles="{{ home.roles | dump }}">
+				<span class="typing-text">{{ home.roles[0] }}</span><span class="cursor" aria-hidden="true">|</span>
 			</h2>
 
-			<p class="subtext">{{ under_welcome_text | safe }}</p>
+			<p class="subtext">{{ home.subtext | safe }}</p>
 
 			<a href="#about" class="learn-more-btn">Learn more <span aria-hidden="true">↓</span></a>
 		</div>
@@ -42,27 +42,23 @@
 	<section id="about" class="home-section">
 		<div class="content about-container">
 			<div class="about-image-wrapper">
-				{%- for img in about_images %}
-				<img src="{{ img }}" alt="{{ 'Photo of Simon' if loop.first else '' }}" class="about-image about-slide{% if loop.first %} active{% endif %}" sizes="(max-width: 768px) 90vw, 420px">
-				{%- endfor %}
+				<img src="{{ home.photo }}" alt="{{ home.photoAlt }}" class="about-image" sizes="(max-width: 768px) 90vw, 420px">
 			</div>
 
 			<div class="about-content">
-				<div class="about-block block-1">
-					<h3>{{ about_title_1 | safe }}</h3>
-					<p>{{ about_text_1 | safe }}</p>
+				{%- for block in home.about %}
+				<div class="about-block block-{{ loop.index }}">
+					<h3>{{ block.title }}</h3>
+					<p>{{ block.text }}</p>
 				</div>
-				<div class="about-block block-2">
-					<h3>{{ about_title_2 | safe }}</h3>
-					<p>{{ about_text_2 | safe }}</p>
-				</div>
+				{%- endfor %}
 			</div>
 		</div>
 	</section>
 
 	<section id="projects" class="home-section">
 		<div class="content carousel-container">
-			<h2 class="highlight">{{ projects_title | safe }}</h2>
+			<h2 class="highlight">{{ home.projectsTitle }}</h2>
 
 			<div class="carousel-track-container">
 				<ul class="carousel-track">
@@ -105,10 +101,10 @@
 	<section id="contact" class="home-section contact-section">
 		<div class="content">
 			<h2 class="highlight">Contact Me</h2>
-			<p class="contact-intro">{{ contact_intro | safe }}</p>
+			<p class="contact-intro">{{ home.contact.intro }}</p>
 
 			<div class="contact-methods">
-				{%- for option in contact_options %}
+				{%- for option in home.contact.options %}
 				<div class="contact-method">
 					<h3>{{ option.title }}</h3>
 					<div class="contact-box">

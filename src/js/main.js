@@ -5,7 +5,6 @@ import { initTyping } from './modules/typing.js';
 import { initCarousel } from './modules/carousel.js';
 import { initTitleMarquee } from './modules/title-marquee.js';
 import { initSectionDots } from './modules/section-dots.js';
-import { initAboutSlider } from './modules/about-slider.js';
 import { initLightbox } from './modules/lightbox.js';
 
 initBackground();
@@ -14,5 +13,4 @@ initTyping();
 initCarousel();
 initTitleMarquee();
 initSectionDots();
-initAboutSlider();
 initLightbox();
