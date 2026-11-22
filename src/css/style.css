@@ -1,74 +1,57 @@
-/* /css/style.css */
+/* Global tokens and base styles, loaded on every page. */
 
 :root {
-    /* --- Colors --- */
-    --color-bg-dark: #222;
-    --color-primary-blue: #0f49be;
-    --color-primary-glow: rgba(15, 73, 190, 0.4);
-    --color-primary-glow-strong: rgba(15, 73, 190, 0.6);
-    --color-primary-hover: rgba(15, 73, 190, 0.1);
-    --color-primary-hover-text: #0f49be;
+    /* Colors */
+    --accent: #0f49be;
+    --accent-glow: color-mix(in srgb, var(--accent) 40%, transparent);
+    --accent-glow-strong: color-mix(in srgb, var(--accent) 60%, transparent);
+    --accent-tint: color-mix(in srgb, var(--accent) 10%, transparent);
 
-    /* Blue hover */
-    --color-secondary-yellow: #0f49be;
-    --color-secondary-hover: #0f49be;
-    --color-secondary-hover-bg: rgba(15, 73, 190, 0.1);
-    --color-secondary-glow: rgba(15, 73, 190, 0.4);
-    --color-secondary-glow-strong: rgba(15, 73, 190, 0.6);
-    
+    --text: #ffffff;
+    --text-muted: #cccccc;
+    --text-dim: #e0e0e0;
+    --text-bold: #ffcc00;      /* **bold** in posts */
+    --text-italic: #00e5ff;    /* *italic* in posts */
+    --text-emphasis: #fa6831;  /* ***bold italic*** in posts */
+    --success: #2ecc71;
 
-    /* Yellow hover 
-    --color-secondary-yellow: #ffd700;
-    --color-secondary-hover: #ffd700;
-    --color-secondary-hover-bg: rgba(255, 215, 0, 0.1);
-    --color-secondary-glow: rgba(255, 215, 0, 0.4);
-    --color-secondary-glow-strong: rgba(255, 215, 0, 0.6);
-    */
-    
-    --color-text-main: #ffffff;
-    --color-text-yellow: #ffcc00;
-    --color-text-cyan: #00e5ff;
-    --color-text-highlight: #fa6831;
-    --color-text-secondary: #000000;
-    --color-text-muted: #cccccc;
-    --color-text-dimmed: #e0e0e0;
-    --color-success: #2ecc71;
-    
-    --color-border: rgba(255, 255, 255, 0.15);
+    --surface: rgba(20, 20, 20, 0.7);
+    --border: rgba(255, 255, 255, 0.15);
 
-    /* --- Typography: Font Families --- */
+    /* Typography */
     --font-main: 'Roboto Mono', monospace;
     --font-pixel: 'Press Start 2P', Courier, monospace;
 
-    /* --- Typography: Font Weights --- */
     --fw-light: 200;
     --fw-regular: 400;
     --fw-semi: 600;
     --fw-bold: 700;
 
-    /* --- Typography: Font Sizes --- */
     --fs-sm: 0.9rem;
     --fs-base: 1rem;
     --fs-md: 1.1rem;
     --fs-lg: 1.2rem;
     --fs-xl: 2.7rem;
     --fs-xxl: 3.5rem;
-    --fs-xxxl: 4.5rem;
+
+    /* Breakpoints used across the site (media queries can't read custom properties):
+       480px small phones · 768px phones · 1024px tablets */
 }
 
-/* Browser default margin reset */
-html, body {
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
     margin: 0;
     padding: 0;
     width: 100%;
     font-family: var(--font-main);
 }
-/*
-html {
-     "y" means vertical scrolling, "mandatory" forces snapping */
-    /*scroll-snap-type: y mandatory; 
-}
-*/
+
 body {
     display: flex;
     flex-direction: column;
@@ -102,29 +85,16 @@ body {
 }
 
 .site-main {
-    flex: 1 0 auto; 
+    flex: 1 0 auto;
     width: 100%;
 }
 
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
-.siteFooter {
-    /* Sticks the bottom of the footer to the bottom of the screen */
-    scroll-snap-align: end; 
-}
-
-/* =========================================
-   RESPONSYWNOŚĆ GLOBALNA
-========================================= */
-@media (max-width: 768px) {
-    html {
-        /* Wyłącza twarde przeskakiwanie (scroll-snap) na telefonach - przywraca płynne przewijanie */
-        scroll-snap-type: none; 
-    }
-}
 /* Images are wrapped in <picture> by the build; let the <img> lay out as if it were a direct child. */
 picture {
     display: contents;
+}
+
+/* Otherwise the <source> elements become empty grid/flex items once <picture> is `contents`. */
+picture > source {
+    display: none;
 }

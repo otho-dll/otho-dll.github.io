@@ -1,199 +1,539 @@
-/* =========================================
-   0. RESET SCROLLOWANIA (Wyłącza snap)
-========================================= */
-html, body, .site-main {
-    scroll-snap-type: none !important;
-    overflow-y: auto !important;
-    height: auto !important;
-}
+/* Blog post: header, Markdown content, embeds (shortcodes), gallery and lightbox. */
 
 /* =========================================
-   1. LAYOUT GŁÓWNY (post.css)
+   LAYOUT
 ========================================= */
 .post-section {
-    padding: 4.5rem 2rem 6rem 2rem; 
+    display: block;
     min-height: 100vh;
-    display: block; 
+    padding: 4.5rem 2rem 6rem;
 }
 
 .post-container {
-    max-width: 1000px;
     width: 100%;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
-/* =========================================
-   2. PRZYCISK "BACK TO BLOG"
-========================================= */
 .back-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    line-height: 1;
     margin-bottom: 3rem;
     padding: 0.8rem 1.5rem;
-    border: 1px solid var(--color-primary-blue);
+    border: 1px solid var(--accent);
     border-radius: 20px;
-    color: var(--color-primary-blue);
-    text-decoration: none;
+    background-color: transparent;
+    color: var(--accent);
     font-family: var(--font-pixel);
     font-size: 0.8rem;
-    background-color: transparent;
+    line-height: 1;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 
 .back-btn:hover {
-    box-shadow: 0 0 15px var(--color-primary-glow);
-    background-color: rgba(15, 73, 190, 0.1);
+    background-color: var(--accent-tint);
+    box-shadow: 0 0 15px var(--accent-glow);
     transform: translateX(-5px);
 }
 
+/* The pixel font has no arrow glyph; use the regular font, slightly larger. */
 .back-btn .arrow {
-    font-family: var(--font-main);
-    font-size: 1.4rem;
-    margin-right: 0.5rem;
     position: relative;
     top: -2px;
+    margin-right: 0.5rem;
+    font-family: var(--font-main);
+    font-size: 1.4rem;
     line-height: 1;
 }
 
 /* =========================================
-   3. NAGŁÓWEK (Tytuł, Data, Główne zdjęcie)
+   HEADER (title, date, cover image)
 ========================================= */
 .post-header {
     margin-bottom: 4rem;
 }
 
 .post-header h1 {
-    font-family: var(--font-pixel) !important;
-    color: var(--color-primary-blue) !important;
-    text-shadow: 0 0 15px var(--color-primary-glow);
-    font-size: 2.5rem;
     margin-bottom: 1.5rem;
+    color: var(--accent);
+    font-family: var(--font-pixel);
+    font-size: 2.5rem;
     line-height: 1.4;
+    text-shadow: 0 0 15px var(--accent-glow);
 }
 
 .post-date {
-    color: var(--color-text-dimmed);
+    display: block;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
     font-family: var(--font-main);
     font-size: 0.9rem;
-    text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 2rem;
-    display: block;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 1rem;
+    text-transform: uppercase;
 }
 
 .post-hero-image {
     width: 100%;
-    aspect-ratio: 16 / 9; 
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid var(--color-border);
     margin-bottom: 3rem;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    aspect-ratio: 16 / 9;
 }
 
 .post-hero-image img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
 }
 
 /* =========================================
-   4. TREŚĆ ARTYKUŁU (Formatowanie Markdown)
+   MARKDOWN CONTENT
 ========================================= */
 .post-content {
-    color: var(--color-text-muted);
+    color: var(--text-muted);
+    font-family: var(--font-main);
     font-size: 1.1rem;
     line-height: 1.8;
-    font-family: var(--font-main);
 }
 
-.post-content h2, 
-.post-content h3 {
-    color: var(--color-text-main);
-    font-family: var(--font-pixel);
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
-}
-
-.post-content h2 { font-size: 1.8rem; color: var(--color-primary-blue); }
-.post-content h3 { font-size: 1.4rem; }
 .post-content p { margin-bottom: 1.5rem; }
-.post-content ul, .post-content ol { margin-bottom: 1.5rem; padding-left: 2rem; }
+.post-content ul,
+.post-content ol { margin-bottom: 1.5rem; padding-left: 2rem; }
 .post-content li { margin-bottom: 0.5rem; }
 
+/* Headings: # is a centered pixel-font title, ## a centered section heading,
+   ### and #### are inline-sized labels. */
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4 {
+    font-family: var(--font-main);
+    line-height: 1.3;
+}
+
+.post-content h1 {
+    margin: 3.5rem 0 0;
+    color: var(--accent);
+    font-family: var(--font-pixel);
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.post-content h2 {
+    margin: 3rem 0 0;
+    color: var(--text);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.post-content h3 {
+    margin: 0;
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.post-content h4 {
+    margin: 0;
+    color: var(--text-emphasis);
+    font-size: 1rem;
+    font-weight: normal;
+    font-style: italic;
+}
+
 .post-content a {
-    color: var(--color-primary-blue);
+    color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 4px;
     transition: color 0.3s ease;
 }
 
-.post-content a:hover { color: var(--color-secondary-yellow); }
+.post-content strong,
+.post-content b {
+    color: var(--text-bold);
+    font-weight: 700;
+}
+
+.post-content em,
+.post-content i {
+    color: var(--text-italic);
+    font-style: italic;
+}
+
+/* ***bold italic*** — for important warnings. */
+.post-content strong em,
+.post-content em strong,
+.post-content b i,
+.post-content i b {
+    color: var(--text-emphasis);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--text-emphasis) 40%, transparent);
+}
 
 .post-content code {
-    background-color: rgba(20, 20, 20, 0.9);
     padding: 0.2rem 0.4rem;
+    border: 1px solid var(--border);
     border-radius: 4px;
-    border: 1px solid var(--color-border);
-    color: var(--color-secondary-yellow);
+    background-color: rgba(20, 20, 20, 0.9);
+    color: var(--accent);
     font-family: monospace;
     font-size: 0.9em;
 }
 
 .post-content pre {
-    background-color: rgba(10, 10, 10, 0.9);
-    padding: 1.5rem;
-    border-radius: 8px;
-    border: 1px solid var(--color-border);
-    overflow-x: auto;
     margin-bottom: 2rem;
+    padding: 1.5rem;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background-color: rgba(10, 10, 10, 0.9);
 }
 
 .post-content pre code {
-    background-color: transparent;
-    border: none;
     padding: 0;
-    color: var(--color-text-main);
+    border: none;
+    background-color: transparent;
+    color: var(--text);
 }
 
 .post-content blockquote {
-    border-left: 4px solid var(--color-primary-blue);
-    margin: 0 0 2rem 0;
+    margin: 0 0 2rem;
     padding: 1rem 2rem;
-    background-color: rgba(15, 73, 190, 0.05);
+    border-left: 4px solid var(--accent);
     border-radius: 0 8px 8px 0;
+    background-color: color-mix(in srgb, var(--accent) 5%, transparent);
     font-style: italic;
 }
 
 .post-content img {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
     margin: 2rem 0;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+/* Standalone images open in the lightbox. */
+.post-content p > picture > img,
+.post-content p > img {
+    cursor: zoom-in;
 }
 
 /* =========================================
-   5. RESPONSIVE (Telefony) DLA STAREGO UKŁADU
+   TABLES
 ========================================= */
-@media (max-width: 768px) {
-    .post-header h1 { font-size: 1.8rem; }
-    .post-content h2 { font-size: 1.5rem; }
-    .post-content h3 { font-size: 1.2rem; }
+.post-content table {
+    width: max-content; /* only as wide as the content needs */
+    max-width: 100%;
+    margin: 1rem auto;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    border-collapse: collapse;
+    background: rgba(10, 10, 10, 0.4);
+    font-size: 0.95rem;
+}
+
+.post-content th,
+.post-content td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: var(--font-main);
+    text-align: left;
+}
+
+.post-content th {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text);
+    font-family: var(--font-pixel);
+    font-size: 0.9rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+.post-content tr:last-child td {
+    border-bottom: none;
+}
+
+.post-content tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Collapsible table: <details class="custom-table-accordion"> in Markdown. */
+.custom-table-accordion {
+    max-width: 100%;
+    margin: 0.5rem auto;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(15, 15, 15, 0.85);
+}
+
+.custom-table-accordion + p {
+    margin-top: 0;
+}
+
+.custom-table-accordion summary {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem 1.5rem;
+    background: rgba(20, 20, 20, 0.9);
+    color: var(--text);
+    font-family: var(--font-pixel);
+    font-size: 1rem;
+    list-style: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.custom-table-accordion summary::-webkit-details-marker {
+    display: none;
+}
+
+/* File icon (same as the PDF embed), drawn with a mask so it follows the text color. */
+.custom-table-accordion summary::before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    background-color: var(--text);
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>') no-repeat center;
+    mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>') no-repeat center;
+}
+
+.custom-table-accordion summary::after {
+    content: "CLICK TO EXPAND \25BE"; /* ▾ */
+    margin-left: 12px;
+    color: var(--text-muted);
+    font-family: var(--font-main);
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.custom-table-accordion[open] summary {
+    border-bottom: 1px solid var(--border);
+}
+
+.custom-table-accordion[open] summary::after {
+    content: "CLICK TO EXPAND \25B4"; /* ▴ */
+    color: var(--accent);
+}
+
+.custom-table-accordion table {
+    width: 100%;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+}
+
+.custom-table-accordion th {
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
 }
 
 /* =========================================
-   GALLERY ({% gallery %} shortcode)
+   EMBED CARDS ({% githubCard %}, {% printablesCard %})
+========================================= */
+.post-content a.embed-card {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 1rem auto;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(20, 20, 20, 0.8);
+    text-decoration: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.post-content a.embed-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 25%, transparent);
+    transform: translateY(-2px);
+}
+
+.post-content .embed-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+}
+
+.embed-info {
+    padding: 1.2rem;
+}
+
+.embed-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    font-family: var(--font-pixel);
+    font-size: 1.1rem;
+}
+
+.post-content .embed-desc {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Printables: icon instead of a preview image, laid out in a row. */
+.post-content a.printables-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+.printables-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    color: #fa6831; /* Printables brand orange */
+}
+
+.printables-card .embed-info {
+    padding: 0;
+}
+
+.printables-brand {
+    margin-right: 5px;
+    color: #fa6831;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+/* =========================================
+   PDF EMBED ({% pdfEmbed %})
+========================================= */
+.embed-pdf-wrapper {
+    max-width: 1000px;
+    margin: 1rem auto;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(15, 15, 15, 0.85);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.embed-pdf-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    list-style: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.embed-pdf-header::-webkit-details-marker {
+    display: none;
+}
+
+.embed-pdf-header:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.embed-pdf-wrapper[open] .embed-pdf-header {
+    border-bottom: 1px solid var(--border);
+    background: rgba(20, 20, 20, 0.9);
+}
+
+.embed-pdf-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    font-family: var(--font-pixel);
+    font-size: 1rem;
+}
+
+.embed-pdf-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 10px;
+    color: var(--text-muted);
+    font-family: var(--font-main);
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.embed-pdf-hint .chevron {
+    transition: transform 0.3s ease;
+}
+
+.embed-pdf-wrapper[open] .embed-pdf-hint {
+    color: var(--accent);
+}
+
+.embed-pdf-wrapper[open] .chevron {
+    transform: rotate(180deg);
+}
+
+.post-content .embed-pdf-download {
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--accent);
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.post-content .embed-pdf-download:hover {
+    background: var(--accent-tint);
+    box-shadow: 0 0 10px var(--accent-glow);
+    transform: translateY(-2px);
+}
+
+.embed-pdf-body {
+    width: 100%;
+    height: 600px;
+    background: #222;
+}
+
+.embed-pdf-body iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* =========================================
+   GALLERY ({% gallery %})
    Up to two tiles side by side; the second shows "+N" when there are more images.
 ========================================= */
 .post-gallery-section {
     margin-top: 5rem;
-    border-top: 1px solid var(--color-border);
     padding-top: 1rem;
+    border-top: 1px solid var(--border);
 }
 
 .gallery {
@@ -211,9 +551,9 @@ html, body, .site-main {
     position: relative;
     display: block;
     padding: 0;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
     overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
     background: rgba(10, 10, 10, 0.4);
     cursor: zoom-in;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -225,8 +565,8 @@ html, body, .site-main {
 
 .gallery-tile:hover,
 .gallery-tile:focus-visible {
-    border-color: var(--color-primary-blue);
-    box-shadow: 0 0 15px rgba(15, 73, 190, 0.3);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 .post-content .gallery-thumb {
@@ -256,8 +596,8 @@ html, body, .site-main {
     font-size: 0.7rem;
     line-height: 1.4;
     opacity: 0;
-    transition: opacity 0.2s ease;
     pointer-events: none;
+    transition: opacity 0.2s ease;
 }
 
 .gallery-tile:hover .gallery-hint,
@@ -275,38 +615,28 @@ html, body, .site-main {
     color: #fff;
     font-family: var(--font-pixel);
     font-size: 2.5rem;
-    text-shadow: 0 0 15px rgba(15, 73, 190, 0.8);
-    transition: background 0.3s ease;
+    text-shadow: 0 0 15px color-mix(in srgb, var(--accent) 80%, transparent);
     pointer-events: none;
+    transition: background 0.3s ease;
 }
 
 .gallery-tile:hover .gallery-more {
     background: rgba(0, 0, 0, 0.4);
 }
 
-@media (max-width: 768px) {
-    .gallery {
-        gap: 0.5rem;
-    }
-
-    .gallery-more {
-        font-size: 1.8rem;
-    }
-}
-
 /* =========================================
-   LIGHTBOX (<dialog>, js/lightbox.js)
+   LIGHTBOX (<dialog>, js/modules/lightbox.js)
 ========================================= */
 .lightbox {
     width: 100vw;
-    height: 100dvh;
     max-width: none;
+    height: 100dvh;
     max-height: none;
     margin: 0;
     padding: 0;
+    overflow: hidden;
     border: none;
     background: transparent;
-    overflow: hidden;
 }
 
 .lightbox[open] {
@@ -323,7 +653,7 @@ html, body, .site-main {
 .lightbox-image {
     max-width: 85%;
     max-height: 85vh;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border);
     border-radius: 6px;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
     object-fit: contain;
@@ -350,8 +680,8 @@ html, body, .site-main {
 .lightbox-close:focus-visible,
 .lightbox-prev:focus-visible,
 .lightbox-next:focus-visible {
-    color: var(--color-primary-blue);
-    text-shadow: 0 0 15px var(--color-primary-glow);
+    color: var(--accent);
+    text-shadow: 0 0 15px var(--accent-glow);
 }
 
 .lightbox-close { top: 1rem; right: 1.5rem; }
@@ -364,7 +694,49 @@ html, body, .site-main {
     display: none;
 }
 
+/* =========================================
+   RESPONSIVE
+========================================= */
 @media (max-width: 768px) {
+    .post-header h1 {
+        font-size: 1.8rem;
+    }
+
+    /* Wide tables scroll sideways instead of squeezing. */
+    .post-content table {
+        display: block;
+        width: 100%;
+        margin: 2rem 0;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .custom-table-accordion table {
+        margin: 0;
+    }
+
+    .embed-pdf-body {
+        height: 450px;
+    }
+
+    .embed-pdf-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .embed-pdf-title {
+        flex-wrap: wrap;
+    }
+
+    .gallery {
+        gap: 0.5rem;
+    }
+
+    .gallery-more {
+        font-size: 1.8rem;
+    }
+
     .lightbox-prev,
     .lightbox-next {
         padding: 0.5rem;
@@ -374,445 +746,4 @@ html, body, .site-main {
     .lightbox-image {
         max-width: 95%;
     }
-}
-
-/* =========================================
-   KARTY LINKÓW (GITHUB / PRINTABLES EMBED)
-========================================= */
-.embed-card {
-    display: flex;
-    flex-direction: column;
-    background: rgba(20, 20, 20, 0.8);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    overflow: hidden;
-    text-decoration: none;
-    max-width: 600px; 
-    margin: 1rem auto !important; /* KLUCZ: auto wyśrodkowuje kartę w pionie i poziomie */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.embed-card:hover {
-    border-color: var(--color-primary-blue);
-    box-shadow: 0 0 20px rgba(15, 73, 190, 0.25);
-    transform: translateY(-2px);
-}
-
-.post-content .embed-card .embed-image img {
-    width: 100% !important;
-    height: auto !important;
-    display: block !important;
-    margin: 0 !important;
-    border: none !important;
-    border-radius: 0 !important;
-    border-bottom: 1px solid var(--color-border) !important;
-}
-
-.embed-info {
-    padding: 1.2rem;
-}
-
-.embed-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--font-pixel, monospace);
-    font-size: 1.1rem;
-    color: var(--color-text-main);
-    margin-bottom: 0.5rem;
-}
-
-.post-content a.embed-card {
-    text-decoration: none !important;
-}
-
-.embed-desc {
-    font-size: 0.95rem;
-    color: var(--color-text-muted);
-    margin: 0 !important;
-    line-height: 1.5;
-}
-
-/* --- Nowy układ specjalnie dla Printables (bez wielkiego zdjęcia) --- */
-.printables-card {
-    flex-direction: row; /* Elementy w poziomie zamiast w pionie */
-    align-items: center;
-    padding: 1.5rem;
-    gap: 1.5rem;
-}
-
-.printables-icon {
-    flex-shrink: 0;
-    color: #fa6831; /* Pomarańczowy kolor Printables */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.printables-card .embed-info {
-    padding: 0; /* Resetujemy padding, bo mamy go już na głównej karcie */
-}
-/* =========================================
-   8. TABELE W ARTYKUŁACH (SUBTELNE)
-========================================= */
-.post-content table {
-    width: max-content; /* Tabela zajmie tylko tyle miejsca, ile potrzebuje tekst, a nie całą stronę */
-    max-width: 100%;    /* Zabezpieczenie przed rozsadzeniem ekranu */
-    border-collapse: collapse;
-    margin: 1rem auto;  /* Wyśrodkowuje tabelę na stronie */
-    background: rgba(10, 10, 10, 0.4); /* Bardziej przezroczyste, dyskretne tło */
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    overflow: hidden;
-    font-size: 0.95rem; /* Delikatnie mniejsza czcionka całego tekstu w tabeli */
-}
-
-/* Zmniejszone marginesy wewnątrz komórek (padding) */
-.post-content th,
-.post-content td {
-    padding: 0.6rem 1rem; 
-    text-align: left;
-    border-bottom: 1px solid var(--color-border);
-    color: var(--color-text-muted);
-    font-family: var(--font-main, sans-serif);
-}
-
-/* Spokojniejszy nagłówek */
-.post-content th {
-    font-family: var(--font-pixel, monospace);
-    color: var(--color-text-main); /* Uspokojony kolor (główny kolor tekstu zamiast jaskrawego niebieskiego) */
-    background: rgba(255, 255, 255, 0.03); /* Bardzo delikatne, neutralne podświetlenie */
-    font-size: 0.9rem;
-    font-weight: normal;
-    letter-spacing: 1px;
-}
-
-/* Usunięcie zbędnej ramki na dole */
-.post-content tr:last-child td {
-    border-bottom: none; 
-}
-
-/* Ekstremalnie subtelne podświetlenie wiersza przy najechaniu */
-.post-content tbody tr:hover {
-    background: rgba(255, 255, 255, 0.02);
-}
-
-/* =========================================
-   TABELE NA TELEFONACH (RESPONSIVE)
-========================================= */
-@media (max-width: 768px) {
-    .post-content table {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-        margin: 2rem 0; /* Na telefonach wyrównuje do lewej, bez wyśrodkowania */
-    }
-}
-
-
-/* =========================================
-   9. OSADZONY PLIK PDF (OSTATECZNA WERSJA)
-========================================= */
-.embed-pdf-wrapper {
-    background: rgba(15, 15, 15, 0.85); 
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 1rem auto;
-    max-width: 1000px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-}
-
-/* Ukrycie standardowego trójkącika przeglądarki */
-/* Ukrycie standardowego trójkącika przeglądarki i poprawny układ */
-.embed-pdf-wrapper summary {
-    list-style: none;
-    cursor: pointer;
-    display: flex !important; /* Zmiana z block na flex przywraca przycisk na prawą stronę! */
-}
-.embed-pdf-wrapper summary::-webkit-details-marker {
-    display: none;
-}
-
-/* Główny pasek (Header) */
-.embed-pdf-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    transition: background 0.3s ease;
-}
-
-.embed-pdf-header:hover {
-    background: rgba(255, 255, 255, 0.03); 
-}
-
-/* Kiedy akordeon jest OTWARTY */
-.embed-pdf-wrapper[open] .embed-pdf-header {
-    border-bottom: 1px solid var(--color-border);
-    background: rgba(20, 20, 20, 0.9);
-}
-
-/* Lewa strona: Tytuł i Podpowiedź w jednej linii */
-.embed-pdf-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: var(--font-pixel, monospace);
-    font-size: 1rem;
-    color: var(--color-text-main);
-}
-
-.embed-pdf-hint {
-    font-family: var(--font-main, sans-serif);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-left: 10px; 
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-}
-
-.embed-pdf-hint .chevron {
-    transition: transform 0.3s ease;
-}
-
-.embed-pdf-wrapper[open] .embed-pdf-hint {
-    color: var(--color-primary-blue);
-}
-
-.embed-pdf-wrapper[open] .chevron {
-    transform: rotate(180deg);
-}
-
-/* Przycisk pobierania (wymuszenie stylów ponad domyślnymi linkami w poście) */
-.post-content .embed-pdf-wrapper a.embed-pdf-download,
-.embed-pdf-wrapper a.embed-pdf-download {
-    font-family: var(--font-main, sans-serif) !important;
-    font-size: 0.85rem !important;
-    color: var(--color-primary-blue) !important;
-    text-decoration: none !important;
-    border: 1px solid var(--color-primary-blue) !important;
-    padding: 0.4rem 1.2rem !important;
-    border-radius: 20px !important;
-    background: transparent !important;
-    transition: all 0.3s ease !important;
-    display: inline-block;
-}
-
-.post-content .embed-pdf-wrapper a.embed-pdf-download:hover {
-    background: rgba(15, 73, 190, 0.1) !important;
-    box-shadow: 0 0 10px var(--color-primary-glow) !important;
-    transform: translateY(-2px);
-}
-
-/* Okno z czytnikiem */
-.embed-pdf-body {
-    width: 100%;
-    height: 600px;
-    background: #222;
-}
-
-.embed-pdf-body iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-}
-
-/* Responsywność */
-@media (max-width: 768px) {
-    .embed-pdf-body { height: 450px; }
-    .embed-pdf-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-    .embed-pdf-title {
-        flex-wrap: wrap; /* Zezwala podpowiedzi na spadek niżej przy wąskim ekranie */
-    }
-}
-
-/* =========================================
-   10. WYRÓŻNIENIA W TEKŚCIE (B / I)
-========================================= */
-.post-content strong,
-.post-content b {
-    color: var(--color-text-yellow); /* Wyraźny, technologiczny żółty */
-    font-weight: 700;
-}
-
-.post-content em,
-.post-content i {
-    color: var(--color-text-cyan); /* Neonowy cyjan - pasuje do mrocznego, technicznego klimatu */
-    font-style: italic;
-}
-
-/* Połączenie pogrubienia z kursywą (***tekst***) - np. dla bardzo ważnych ostrzeżeń */
-.post-content strong em,
-.post-content em strong,
-.post-content b i,
-.post-content i b {
-    color: var(--color-text-highlight); /* Pomarańczowy akcent (jak w Printables) */
-    text-shadow: 0 0 8px rgba(250, 104, 49, 0.4);
-}
-
-/* =========================================
-   11. NAGŁÓWKI W ARTYKUŁACH (H1 - H4)
-========================================= */
-
-/* Wspólny niebieski kolor i normalna czcionka dla wszystkich nagłówków w tekście */
-.post-content h1,
-.post-content h2,
-.post-content h3,
-.post-content h4 {
-    line-height: 1.3;
-    font-family: var(--font-main, sans-serif); /* Domyślnie zwykła czcionka dla wszystkich */
-}
-
-/* H1: Czcionka Press Start (pixelowa), 2.5 raza większy, pogrubiony, tylko margines u góry */
-.post-content h1 {
-    color: var(--color-primary-blue);
-    font-family: var(--font-pixel, monospace); /* Wymuszenie pikselowej czcionki tylko dla H1 */
-    text-align: center; /* Wyśrodkowanie */
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 3.5rem 0 0 0 !important; 
-}
-
-/* H2: 1.5 raza większy, pogrubiony, tylko margines u góry */
-.post-content h2 {
-    color: var(--color-text-main);
-    text-align: center; /* Wyśrodkowanie */
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 3rem 0 0 0 !important;
-}
-
-/* H3: Jak normalna czcionka (1rem), pogrubiony, bez marginesów */
-.post-content h3 {
-    color: var(--color-text-main);
-    font-size: 1rem;
-    font-weight: 700;
-    margin: 0 !important;
-}
-
-/* H4: Jak normalna czcionka (1rem), normalna grubość, kursywa, bez marginesów */
-.post-content h4 {
-    color: var(--color-text-highlight);
-    font-size: 1rem;
-    font-weight: normal;
-    font-style: italic;
-    margin: 0 !important;
-}
-/* =========================================
-   12. ZWIJANE TABELE W MARKDOWNIE
-========================================= */
-.custom-table-accordion {
-    background: rgba(15, 15, 15, 0.85);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    margin: 0.5rem auto !important; /* Zmniejszamy margines górny i dolny do minimum */
-    overflow: hidden;
-    max-width: 100%;
-}
-
-/* Usuwamy domyślny margines z tekstu/akapitu, który znajduje się zaraz pod tabelą */
-.custom-table-accordion + p {
-    margin-top: 0 !important;
-}
-
-/* Pasek tytułowy tabeli (układ identyczny jak w PDF) */
-.custom-table-accordion summary {
-    padding: 1rem 1.5rem;
-    cursor: pointer;
-    font-family: var(--font-pixel, monospace);
-    font-size: 1rem; /* Powiększone do 1rem, aby pasowało do PDF */
-    color: var(--color-text-main);
-    display: flex;
-    justify-content: flex-start; /* Równa tytuł i podpowiedź do lewej */
-    align-items: center;
-    list-style: none;
-    background: rgba(20, 20, 20, 0.9);
-    transition: background 0.3s ease;
-}
-
-.custom-table-accordion summary::-webkit-details-marker {
-    display: none;
-}
-
-/* 1. Wstrzyknięta ikona pliku przed tytułem (identyczna jak w PDF) */
-.custom-table-accordion summary::before {
-    content: "";
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    margin-right: 12px;
-    background-color: var(--color-text-main);
-    /* Używamy maski, aby narysować SVG z zachowaniem koloru tekstu */
-    -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>') no-repeat center;
-    mask: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>') no-repeat center;
-}
-
-/* 2. Tekst CLICK TO EXPAND + strzałka wstrzyknięte zaraz za tytułem */
-.custom-table-accordion summary::after {
-    content: "CLICK TO EXPAND \25BE"; /* \25BE to trójkąt w dół (▾) */
-    font-family: var(--font-main, sans-serif);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-left: 12px;
-    
-    /* Resetujemy stare zachowanie strzałki rysowanej z borderów */
-    border: none;
-    width: auto;
-    height: auto;
-    transform: none;
-    transition: color 0.3s ease;
-}
-
-/* Stan otwarty: Zmiana koloru i odwrócenie trójkąta */
-.custom-table-accordion[open] summary::after {
-    content: "CLICK TO EXPAND \25B4"; /* \25B4 to trójkąt w górę (▴) */
-    color: var(--color-primary-blue);
-    margin-top: 0;
-    transform: none;
-}
-
-.custom-table-accordion[open] summary {
-    border-bottom: 1px solid var(--color-border);
-}
-
-/* Reset stylów dla tabeli (zostaje bez zmian) */
-.custom-table-accordion table {
-    margin: 0 !important;
-    border: none !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    width: 100% !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-}
-
-.custom-table-accordion th {
-    background: rgba(15, 73, 190, 0.05);
-}
-
-
-/* Standalone images in a post open in the lightbox. */
-.post-content p > picture img,
-.post-content p > img {
-    cursor: zoom-in;
-}
-.printables-brand {
-    margin-right: 5px;
-    color: #fa6831;
-    font-family: sans-serif;
-    font-weight: bold;
 }

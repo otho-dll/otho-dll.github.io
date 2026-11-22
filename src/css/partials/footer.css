@@ -1,38 +1,33 @@
-/* /css/partials/footer.css */
+/* Site footer with three animated "crystal" layers along its top edge. */
 
-/* =========================================
-   MAIN FOOTER STYLES
-========================================= */
 .siteFooter {
     position: relative;
-    color: var(--color-text-dimmed);
-    font-family: var(--font-main);
-    padding: 10rem 2rem 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: auto; 
+    margin-top: auto;
+    padding: 10rem 2rem 2rem;
     overflow: hidden;
     background: transparent;
+    color: var(--text-dim);
+    font-family: var(--font-main);
 }
 
 /* =========================================
-   ANIMATED BACKGROUND LAYERS
+   BACKGROUND LAYERS
+   Each layer's top edge is a polygon that slowly morphs between two shapes.
 ========================================= */
 .footer-bg-layer {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     z-index: 1;
     pointer-events: none;
 }
 
 .layer-1 {
     background-color: rgba(30, 30, 30, 0.4);
-    backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     animation: crystalLayer1 8s ease-in-out infinite alternate;
 }
 
@@ -62,9 +57,10 @@
 }
 
 /* =========================================
-   FOOTER CONTENT & NAVIGATION
+   CONTENT
 ========================================= */
-.footer-links, .footer-icons, .footer-bottom {
+.footer-links,
+.footer-bottom {
     position: relative;
     z-index: 2;
 }
@@ -75,36 +71,31 @@
     justify-content: center;
     gap: 1.5rem;
     margin-bottom: 2rem;
-    
-    /* Resetting default list styles */
-    list-style: none;
     padding: 0;
+    list-style: none;
 }
 
 .footer-links a {
-    color: var(--color-text-main);
-    text-decoration: none;
+    color: var(--text);
     font-size: var(--fs-base);
     font-weight: var(--fw-light);
+    text-decoration: none;
     transition: color 0.2s;
 }
 
 .footer-links a:hover {
-    color: var(--color-secondary-hover);
+    color: var(--accent);
     font-weight: var(--fw-regular);
 }
 
-/* =========================================
-   FOOTER BOTTOM (Copyright info)
-========================================= */
 .footer-bottom {
     width: 100%;
     max-width: 800px;
-    border-top: 1px solid var(--color-border);
     padding-top: 1.5rem;
-    text-align: center;
+    border-top: 1px solid var(--border);
     font-size: var(--fs-sm);
     letter-spacing: 0.5px;
+    text-align: center;
 }
 
 .footer-bottom p {
@@ -112,25 +103,21 @@
 }
 
 .heart {
-    color: var(--color-success);
-}
-
-.license {
-    color: var(--color-success);
-    text-decoration: none;
+    color: var(--success);
 }
 
 /* =========================================
-   MOBILE RESPONSIVENESS
+   RESPONSIVE
+   On narrow screens vw-based edges get too flat, so pixel values are used instead.
 ========================================= */
 @media (max-width: 768px) {
     .siteFooter {
         padding-top: 7rem;
     }
-    
-    .layer-1 { animation: crystalMobile1 8s ease-in-out infinite alternate; }
-    .layer-2 { animation: crystalMobile2 6s ease-in-out infinite alternate; }
-    .layer-3 { animation: crystalMobile3 4s ease-in-out infinite alternate; }
+
+    .layer-1 { animation-name: crystalMobile1; }
+    .layer-2 { animation-name: crystalMobile2; }
+    .layer-3 { animation-name: crystalMobile3; }
 }
 
 @keyframes crystalMobile1 {
@@ -146,4 +133,11 @@
 @keyframes crystalMobile3 {
     0% { clip-path: polygon(0% 60px, 25% 45px, 50% 65px, 75% 50px, 100% 55px, 100% 100%, 0% 100%); }
     100% { clip-path: polygon(0% 50px, 35% 60px, 60% 45px, 100% 60px, 100% 100%, 0% 100%); }
+}
+
+/* Keep the crystal edge, just stop it from moving. */
+@media (prefers-reduced-motion: reduce) {
+    .footer-bg-layer {
+        animation-play-state: paused;
+    }
 }

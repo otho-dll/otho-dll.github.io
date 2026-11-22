@@ -1,97 +1,104 @@
-/* =========================================
-   1. RESET (Wyłączenie scroll-snap z głównej)
-========================================= */
-html, body, .site-main {
-    scroll-snap-type: none !important;
-    overflow-y: auto !important;
-    height: auto !important;
-}
+/* Blog index: posts grouped by year, cards zig-zag left/right (see the postsByYear collection). */
 
 /* =========================================
-   2. BLOG LAYOUT (Kontenery)
+   LAYOUT
 ========================================= */
 .blog-list-section {
-    /* Zmniejszamy 8rem na 4.5rem (lub inną wartość, która Ci się spodoba) */
-    padding: 4.5rem 2rem 6rem 2rem; 
+    display: block;
     min-height: 100vh;
-    display: block; 
+    padding: 4.5rem 2rem 6rem;
     overflow-x: hidden;
 }
 
 .blog-list-section .content {
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto; 
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .blog-grid {
     display: flex;
     flex-direction: column;
+    gap: 4rem;
     width: 100%;
-    gap: 4rem; /* Odstęp między całymi rzędami */
 }
 
-/* =========================================
-   3. TYPOGRAFIA I NAGŁÓWKI (Lata)
-========================================= */
 .main-blog-title {
+    margin-bottom: 3rem;
+    color: var(--accent);
     font-family: var(--font-pixel);
-    color: var(--color-primary-blue);
-    text-shadow: 0 0 15px var(--color-primary-glow);
     font-size: 3rem;
     text-align: center;
-    margin-bottom: 3rem;
+    text-shadow: 0 0 15px var(--accent-glow);
 }
 
+/* Year heading with a line running behind it. */
 .year-divider {
-    width: 100%;
-    text-align: center;
     position: relative;
-    margin: -1rem 0; /* Delikatnie łagodzi odstęp przed sekcją kart */
+    width: 100%;
+    margin: -1rem 0;
+    text-align: center;
 }
 
 .year-divider h2 {
-    font-family: var(--font-pixel);
-    font-size: 2.5rem;
-    color: var(--color-text-dimmed); 
-    display: inline-block;
-    background-color: var(--color-bg); 
-    padding: 0 1.5rem;
     position: relative;
     z-index: 2;
+    display: inline-block;
+    padding: 0 1.5rem;
+    color: var(--text-dim);
+    font-family: var(--font-pixel);
+    font-size: 2.5rem;
 }
 
 .year-divider::before {
     content: "";
     position: absolute;
     top: 50%;
-    left: 0;
     right: 0;
-    height: 1px;
-    background: var(--color-border);
+    left: 0;
     z-index: 1;
+    height: 1px;
+    background: var(--border);
 }
 
 /* =========================================
-   4. KARTA POSTA (Glassmorphism & Asymetria)
+   POST CARD
+   The whole card is clickable: the "Read More" link's ::after covers it.
 ========================================= */
 .blog-card {
+    position: relative;
     display: flex;
-    background-color: rgba(20, 20, 20, 0.7);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    overflow: hidden;
     min-height: 320px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background-color: var(--surface);
     transition: all 0.3s ease;
 }
 
 .blog-card:hover {
-    border-color: var(--color-primary-blue);
-    box-shadow: 0 0 15px var(--color-primary-hover);
+    border-color: var(--accent);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 15%, transparent);
+    transform: translateY(-4px);
+}
+
+/* Zig-zag offset uses `translate`, so it combines with the hover `transform` above. */
+.card-left {
+    flex-direction: row;
+    translate: -3rem 0;
+}
+
+.card-right {
+    flex-direction: row-reverse;
+    translate: 3rem 0;
+}
+
+.card-center {
+    flex-direction: row;
 }
 
 .blog-image {
@@ -101,40 +108,24 @@ html, body, .site-main {
 }
 
 .blog-image img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s ease;
-    display: block;
 }
 
 .blog-card:hover .blog-image img {
-    transform: scale(1.05); /* Zoom przy najechaniu */
+    transform: scale(1.05);
 }
 
 .blog-info {
-    flex: 1;
-    padding: 2.5rem 3rem;
     display: flex;
+    flex: 1;
     flex-direction: column;
-    justify-content: center;
     align-items: flex-start;
-}
-
-/* --- Przesunięcia (Lewo/Prawo) --- */
-.card-left {
-    transform: translateX(-3rem);
-    flex-direction: row; 
-}
-
-.card-right {
-    transform: translateX(3rem);
-    flex-direction: row-reverse; 
-}
-
-.card-center {
-    transform: translateX(0); /* Zeruje przesunięcie */
-    flex-direction: row;      /* Układ standardowy (zdjęcie po lewej) */
+    justify-content: center;
+    padding: 2.5rem 3rem;
 }
 
 .card-right .blog-info {
@@ -142,36 +133,32 @@ html, body, .site-main {
     text-align: right;
 }
 
-/* =========================================
-   5. WNĘTRZE KARTY (Odstępy, Tekst, Tagi)
-========================================= */
 .card-date {
-    font-family: var(--font-main);
-    color: var(--color-primary-blue);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.2rem;
     display: block;
+    margin-bottom: 0.2rem;
+    color: var(--accent);
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .blog-info .post-title {
-    font-family: var(--font-pixel);
-    color: var(--color-text-main); 
-    font-size: 1.6rem;
     margin-top: 0;
     margin-bottom: 0.5rem;
+    color: var(--text);
+    font-family: var(--font-pixel);
+    font-size: 1.6rem;
 }
 
 .blog-info p {
-    color: var(--color-text-muted);
-    font-size: var(--fs-md);
-    line-height: 1.6;
     margin-top: 0;
     margin-bottom: 1rem;
+    color: var(--text-muted);
+    font-size: var(--fs-md);
+    line-height: 1.6;
 }
 
-/* --- Tagi --- */
 .blog-tags {
     display: flex;
     flex-wrap: wrap;
@@ -180,81 +167,89 @@ html, body, .site-main {
 }
 
 .card-right .blog-tags {
-    justify-content: flex-end; /* Klei tagi do prawej na prawej karcie */
+    justify-content: flex-end;
 }
 
 .blog-tags .tag {
-    background: rgba(15, 73, 190, 0.15);
-    color: var(--color-primary-blue);
     padding: 5px 12px;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
     border-radius: 4px;
-    border: 1px solid rgba(15, 73, 190, 0.3);
-    font-size: 0.7rem;
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
     font-family: var(--font-pixel);
+    font-size: 0.7rem;
 }
 
-/* --- Przycisk Read More --- */
 .card-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    line-height: 1;
+    margin-top: 0.5rem;
     padding: 0.8rem 1.5rem;
-    margin-top: 0.5rem; 
-    border: 1px solid var(--color-primary-blue);
+    border: 1px solid var(--accent);
     border-radius: 20px;
-    color: var(--color-primary-blue);
-    text-decoration: none;
+    background-color: transparent;
+    color: var(--accent);
     font-family: var(--font-pixel);
     font-size: 0.8rem;
-    background-color: transparent;
+    line-height: 1;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 
 .card-btn:hover {
-    box-shadow: 0 0 15px var(--color-primary-glow);
-    color: var(--color-primary-blue);
-    background-color: rgba(15, 73, 190, 0.1);
+    background-color: var(--accent-tint);
+    color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
     transform: translateY(-2px);
 }
 
+.card-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+/* The pixel font has no arrow glyph; use the regular font, slightly larger. */
 .card-btn .arrow {
-    font-family: var(--font-main); /* Wymuszamy normalną czcionkę zamiast pikselowej */
-    font-size: 1.2rem; /* Powiększamy ją, żeby pasowała do "Read More" */
-    margin-left: 0.4rem; /* Dodajemy lekki odstęp */
     position: relative;
-    top: -1px; /* Drobna korekta w pionie, żeby środek strzałki zgrywał się z tekstem */
+    top: -1px;
+    margin-left: 0.4rem;
+    font-family: var(--font-main);
+    font-size: 1.2rem;
 }
 
 /* =========================================
-   6. RESPONSIVE (Telefony i Tablety)
+   RESPONSIVE
+   Cards stack (image on top) below 1200px, where the zig-zag no longer fits.
 ========================================= */
 @media (max-width: 1200px) {
     .blog-grid {
         gap: 3rem;
     }
 
-    .card-left, .card-right, .card-center {
-        transform: translateX(0); 
-        flex-direction: column; 
+    .card-left,
+    .card-right,
+    .card-center {
+        flex-direction: column;
+        translate: none;
     }
 
-    /* Resetujemy wyrównanie tekstów na kartach */
     .card-right .blog-info {
         align-items: flex-start;
         text-align: left;
     }
-    
+
     .card-right .blog-tags {
         justify-content: flex-start;
     }
 
-    /* Naprawa zmiażdżonych zdjęć! */
     .blog-image {
-        aspect-ratio: 16 / 9; /* Zdjęcie zawsze zachowa idealne proporcje */
-        height: auto;         /* Pozwalamy mu rosnąć w pionie */
-        width: 100%;
         flex: none;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
     }
 
     .blog-info {
@@ -262,41 +257,12 @@ html, body, .site-main {
     }
 }
 
-/* Opcjonalnie: Jeszcze ciaśniej na bardzo małych telefonach */
 @media (max-width: 480px) {
     .blog-info {
         padding: 1.5rem;
     }
-    
+
     .blog-info .post-title {
         font-size: 1.3rem;
     }
-}
-
-/* 1. Ustawiamy kartę jako "bazę" dla niewidzialnej warstwy */
-.blog-card {
-    position: relative;
-}
-
-/* 2. Rozciągamy klikalny obszar z linku "Read more" na całą kartę */
-.blog-card .card-btn::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1; /* Kładzie klikalną warstwę na samym wierzchu karty */
-}
-
-/* 3. EFEKT HOVER (Opcjonalne, ale bardzo polecane)
-   Sprawia, że cała karta delikatnie się podświetla/unosi, gdy najedziesz na nią myszką,
-   dając użytkownikowi wyraźny sygnał, że cała jest klikalna */
-.blog-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(15, 73, 190, 0.15); /* Delikatna niebieska poświata */
-    transition: all 0.3s ease;
-}
-.blog-card {
-    transition: all 0.3s ease; /* Płynny powrót do pierwotnego stanu */
 }
