@@ -10,11 +10,16 @@
 export function getLinkActiveState(itemUrl, pageUrl) {
 	let response = '';
 
+	// pageUrl is `false` for templates that are not written to disk.
+	if (typeof pageUrl !== 'string') {
+		return response;
+	}
+
 	if (itemUrl === pageUrl) {
 		response = ' aria-current="page"';
 	}
 
-	if (itemUrl.length > 1 && pageUrl.indexOf(itemUrl) === 0) {
+	if (itemUrl.length > 1 && pageUrl.startsWith(itemUrl)) {
 		response += ' data-state="active"';
 	}
 
