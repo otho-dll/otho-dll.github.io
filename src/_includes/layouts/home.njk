@@ -74,9 +74,14 @@
 			{%- set postCount = (collections.post | published | length) %}
 			{%- set projectCount = (collections.project | length) %}
 			<div class="hero-footer">
-				<a class="hero-stats" href="#projects" aria-label="{{ postCount }} posts and {{ projectCount }} projects in the {{ settings.maker_log_title }}">
-					<span class="hero-stat"><strong>{{ postCount }}</strong> {{ 'post' if postCount == 1 else 'posts' }}</span>
-					<span class="hero-stat"><strong>{{ projectCount }}</strong> {{ 'project' if projectCount == 1 else 'projects' }}</span>
+				{#- Labels from settings.yml (count_labels): [singular, plural]. #}
+				{%- set postLabels = settings.count_labels.posts if settings.count_labels and settings.count_labels.posts else ['post', 'posts'] %}
+				{%- set projectLabels = settings.count_labels.projects if settings.count_labels and settings.count_labels.projects else ['project', 'projects'] %}
+				{%- set postLabel = postLabels[0 if postCount == 1 else 1] %}
+				{%- set projectLabel = projectLabels[0 if projectCount == 1 else 1] %}
+				<a class="hero-stats" href="#projects" aria-label="{{ postCount }} {{ postLabel }} and {{ projectCount }} {{ projectLabel }} in the {{ settings.maker_log_title }}">
+					<span class="hero-stat"><strong>{{ postCount }}</strong> {{ postLabel }}</span>
+					<span class="hero-stat"><strong>{{ projectCount }}</strong> {{ projectLabel }}</span>
 					{%- if settings.making_since %}
 					<span class="hero-stat"><strong>{{ settings.making_since }}</strong> making since</span>
 					{%- endif %}
