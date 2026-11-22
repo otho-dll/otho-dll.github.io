@@ -83,7 +83,8 @@
 					<span class="hero-stat"><strong>{{ postCount }}</strong> {{ postLabel }}</span>
 					<span class="hero-stat"><strong>{{ projectCount }}</strong> {{ projectLabel }}</span>
 					{%- if settings.making_since %}
-					<span class="hero-stat"><strong>{{ settings.making_since }}</strong> making since</span>
+					{#- Quieter than the counts: regular font and text color. #}
+					<span class="hero-stat hero-stat--since">making since <span class="hero-stat-year">{{ settings.making_since }}</span></span>
 					{%- endif %}
 				</a>
 				{%- if settings.now %}
