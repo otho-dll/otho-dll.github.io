@@ -69,6 +69,25 @@
 				<span class="typing-text">{{ settings.roles[0] }}</span><span class="cursor" aria-hidden="true">|</span>
 			</p>
 			<p class="hero-intro">{{ settings.intro }}</p>
+
+			{#- Bottom of the intro tile: counts from the Maker log (updated on every build) and "Now". #}
+			{%- set postCount = (collections.post | published | length) %}
+			{%- set projectCount = (collections.project | length) %}
+			<div class="hero-footer">
+				<a class="hero-stats" href="#projects" aria-label="{{ postCount }} posts and {{ projectCount }} projects in the {{ settings.maker_log_title }}">
+					<span class="hero-stat"><strong>{{ postCount }}</strong> {{ 'post' if postCount == 1 else 'posts' }}</span>
+					<span class="hero-stat"><strong>{{ projectCount }}</strong> {{ 'project' if projectCount == 1 else 'projects' }}</span>
+					{%- if settings.making_since %}
+					<span class="hero-stat"><strong>{{ settings.making_since }}</strong> making since</span>
+					{%- endif %}
+				</a>
+				{%- if settings.now %}
+				{%- set nowStatus = settings.statuses['working-on'] %}
+				<p class="hero-now" style="--now-color: {{ nowStatus.color if nowStatus else '#5fbf86' }};">
+					<span class="hero-now-dot" aria-hidden="true"></span><span class="hero-now-label">Now:</span> {{ settings.now }}
+				</p>
+				{%- endif %}
+			</div>
 		</section>
 
 		<div class="tile bento-photo">

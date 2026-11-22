@@ -50,6 +50,12 @@ roles:
   - Gamer
   - Robotics Technician
 intro: "I design and build electronics, robots and 3D-printed things, and write about how they're made."
+# What you're up to right now, shown with a pulsing dot at the bottom of the intro tile.
+# Leave empty ("") to hide it.
+now: "Studying microelectronics and learning PCB design."
+# Optional year for a "making since" counter next to the post/project counts (e.g. 2019).
+# Leave empty to hide it.
+making_since: ""
 photo: /images/Me.jpg
 photo_alt: Simon with a quadruped robot
 

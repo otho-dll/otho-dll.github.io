@@ -26,8 +26,8 @@
 
 .bento > * { grid-column: span 12; }
 
-.bento-hero  { grid-column: span 8; grid-row: span 2; }
-.bento-photo { grid-column: span 4; grid-row: span 2; }
+.bento-hero  { grid-column: span 8; }
+.bento-photo { grid-column: span 4; }
 .bento-about { grid-column: span 6; }
 
 /* Featured project in the "compact" layout shares the about row. */
@@ -84,8 +84,7 @@
 .bento-hero {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 2.5rem;
+    padding: 2.5rem 2.5rem 1.75rem;
     overflow: hidden;
 }
 
@@ -101,14 +100,14 @@
     right: -70px;
     bottom: -90px;
     width: 340px;
-    opacity: 0.06;
+    opacity: 0.05;
     transform: rotate(-12deg);
     pointer-events: none;
     user-select: none;
 }
 
 :root[data-theme="light"] .hero-watermark {
-    opacity: 0.09;
+    opacity: 0.07;
 }
 
 .hero-greeting {
@@ -152,23 +151,96 @@
 
 .hero-intro {
     max-width: 34em;
-    margin: 0;
+    margin: 0 0 1.5rem;
     color: var(--text-muted);
     font-size: 1.1rem;
     line-height: 1.6;
 }
 
+/* The intro text sets the row height; the photo fills it without making the row taller. */
 .bento-photo {
+    min-height: 320px;
     padding: 0;
     overflow: hidden;
 }
 
 .bento-photo img {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
-    min-height: 320px;
     object-fit: cover;
+    object-position: center 30%; /* keep the face in frame */
+}
+
+/* Bottom strip of the intro tile: counts from the Maker log + "Now". */
+.hero-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-top: auto;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+}
+
+.hero-stats {
+    display: flex;
+    gap: 1.75rem;
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.hero-stat {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.hero-stat strong {
+    color: var(--accent-2);
+    font-family: var(--font-pixel);
+    font-size: 1.4rem;
+    font-weight: normal;
+}
+
+.hero-stats:hover .hero-stat strong {
+    color: var(--accent);
+}
+
+.hero-now {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.hero-now-label {
+    color: var(--text);
+    font-weight: var(--fw-semi);
+}
+
+.hero-now-dot {
+    flex-shrink: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--now-color);
+    box-shadow: 0 0 0 0 var(--now-color);
+    animation: now-pulse 2s ease-out infinite;
+}
+
+@keyframes now-pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--now-color) 70%, transparent); }
+    100% { box-shadow: 0 0 0 9px transparent; }
 }
 
 /* =========================================
@@ -577,8 +649,8 @@
 ========================================= */
 @media (max-width: 1024px) {
     .bento-hero,
-    .bento-photo { grid-column: span 12; grid-row: auto; }
-    .bento-photo { max-height: 420px; }
+    .bento-photo { grid-column: span 12; }
+    .bento-photo { height: 420px; }
     .bento-about,
     .featured-is-compact .bento-about { grid-column: span 6; }
 
@@ -643,5 +715,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .cursor { animation: none; }
+    .cursor,
+    .hero-now-dot { animation: none; }
 }
