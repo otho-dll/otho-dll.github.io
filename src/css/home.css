@@ -195,11 +195,13 @@
     text-decoration: none;
 }
 
+/* Number and label are centered on each other (the pixel font's baseline doesn't match the text's). */
 .hero-stat {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 0.5rem;
     font-size: 0.8rem;
+    line-height: 1;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
@@ -209,6 +211,7 @@
     font-family: var(--font-pixel);
     font-size: 1.4rem;
     font-weight: normal;
+    line-height: 1;
 }
 
 .hero-stats:hover .hero-stat strong {
