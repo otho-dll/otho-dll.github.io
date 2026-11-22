@@ -1,5 +1,5 @@
 ---
-layout: "layouts/post.html"
+layout: post
 tags: ["post"]
 title: "How to make your own Pi Pico"
 date: "2026-09-02"

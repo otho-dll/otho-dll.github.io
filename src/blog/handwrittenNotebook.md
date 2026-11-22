@@ -1,5 +1,5 @@
 ---
-layout: "layouts/post.html"
+layout: post
 tags: ["post"]
 title: "The best app for handwritten notes"
 date: "2026-11-06"

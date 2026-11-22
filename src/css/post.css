@@ -187,325 +187,193 @@ html, body, .site-main {
 }
 
 /* =========================================
-   6. STARA GALERIA I LIGHTBOX (Zostawiona z oryginału)
+   GALLERY ({% gallery %} shortcode)
+   Up to two tiles side by side; the second shows "+N" when there are more images.
 ========================================= */
 .post-gallery-section {
     margin-top: 5rem;
     border-top: 1px solid var(--color-border);
-    padding-top: 3rem;
+    padding-top: 1rem;
 }
 
-.post-gallery-section h3 {
-    font-family: var(--font-pixel);
-    color: var(--color-primary-blue);
-    margin-bottom: 2rem;
-    font-size: 1.5rem;
-    text-shadow: 0 0 10px var(--color-primary-glow);
-}
-
-.gallery-grid {
+.gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
-}
-
-.gallery-item {
-    position: relative;
-    aspect-ratio: 1 / 1; 
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    border: 1px solid var(--color-border);
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-}
-
-.gallery-overlay {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(15, 73, 190, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.gallery-overlay span {
-    font-family: var(--font-pixel);
-    color: white;
-    font-size: 0.8rem;
-    background: rgba(0,0,0,0.7);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-}
-
-.gallery-item:hover img {
-    transform: scale(1.1);
-}
-
-.gallery-item:hover .gallery-overlay {
-    opacity: 1;
-}
-
-.lightbox {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px); 
-    z-index: 9999;
-    display: none; 
-    align-items: center;
-    justify-content: center;
-}
-
-.lightbox.active {
-    display: flex;
-}
-
-.lightbox img {
-    max-width: 90%;
-    max-height: 85vh;
-    border-radius: 8px;
-    border: 1px solid var(--color-primary-blue);
-    box-shadow: 0 0 30px var(--color-primary-glow);
-    object-fit: contain;
-}
-
-.lightbox-close {
-    position: absolute;
-    top: 20px;
-    right: 40px;
-    font-size: 3rem;
-    color: white;
-    cursor: pointer;
-    transition: color 0.3s;
-    font-family: sans-serif;
-}
-
-.lightbox-prev, .lightbox-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 4rem;
-    cursor: pointer;
-    padding: 1rem;
-    transition: all 0.3s;
-}
-
-.lightbox-prev:hover, .lightbox-next:hover, .lightbox-close:hover {
-    color: var(--color-primary-blue);
-    text-shadow: 0 0 15px var(--color-primary-glow);
-}
-
-.lightbox-prev { left: 20px; }
-.lightbox-next { right: 20px; }
-
-@media (max-width: 768px) {
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 1rem;
-    }
-    .lightbox-prev, .lightbox-next {
-        font-size: 2.5rem;
-        padding: 0.5rem;
-    }
-}
-
-/* =========================================
-   7. NOWA GALERIA W TEKŚCIE (MAX 2 ZDJĘCIA)
-========================================= */
-.custom-inline-gallery {
-    display: grid !important;
-    /* Sztywno 2 kolumny po równo, NIGDY nie zawija do nowej linii */
-    grid-template-columns: repeat(2, 1fr) !important; 
-    gap: 1.5rem !important;
-    width: 100% !important;
     margin: 3rem 0;
 }
 
-/* Jeśli jest tylko 1 zdjęcie, wyśrodkuj i zajmij pełną szerokość */
-.custom-inline-gallery.single-img {
-    grid-template-columns: 1fr !important;
+.gallery--single {
+    grid-template-columns: 1fr;
 }
 
-.custom-img-wrapper {
+.gallery-tile {
     position: relative;
+    display: block;
+    padding: 0;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid var(--color-border);
     background: rgba(10, 10, 10, 0.4);
-    height: 100%;
+    cursor: zoom-in;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Formatowanie obrazków */
-.post-content .custom-inline-gallery img.custom-clickable-img {
-    margin: 0 !important;
-    border: none !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important; /* Wypełnia równe kafelki */
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    display: block;
+.gallery-tile[hidden] {
+    display: none;
 }
 
-.custom-img-wrapper:hover .custom-clickable-img {
-    transform: scale(1.03);
-}
-
-.custom-img-wrapper:hover {
+.gallery-tile:hover,
+.gallery-tile:focus-visible {
     border-color: var(--color-primary-blue);
     box-shadow: 0 0 15px rgba(15, 73, 190, 0.3);
 }
 
-/* Zwykła podpowiedź powiększenia */
-.custom-zoom-hint {
+.post-content .gallery-thumb {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-tile:hover .gallery-thumb {
+    transform: scale(1.03);
+}
+
+.gallery-hint {
     position: absolute;
-    bottom: 12px;
     right: 12px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
+    bottom: 12px;
     padding: 5px 10px;
     border-radius: 4px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    font-family: var(--font-pixel);
     font-size: 0.7rem;
-    font-family: var(--font-pixel, monospace);
+    line-height: 1.4;
     opacity: 0;
     transition: opacity 0.2s ease;
     pointer-events: none;
 }
 
-.custom-img-wrapper:hover .custom-zoom-hint {
+.gallery-tile:hover .gallery-hint,
+.gallery-tile:focus-visible .gallery-hint {
     opacity: 1;
 }
 
-/* NAKŁADKA "+X ZDJĘĆ" NA DRUGIM KAFELKU */
-.more-overlay {
+.gallery-more {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.65); /* Przyciemnienie zdjęcia */
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none; /* Pozwala kliknąć w zdjęcie pod spodem */
-    transition: background 0.3s ease;
-}
-
-.more-overlay span {
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    font-family: var(--font-pixel);
     font-size: 2.5rem;
-    font-family: var(--font-pixel, monospace);
-    color: white;
     text-shadow: 0 0 15px rgba(15, 73, 190, 0.8);
+    transition: background 0.3s ease;
+    pointer-events: none;
 }
 
-.custom-img-wrapper:hover .more-overlay {
-    background: rgba(0, 0, 0, 0.4); /* Lekkie rozjaśnienie po najechaniu */
+.gallery-tile:hover .gallery-more {
+    background: rgba(0, 0, 0, 0.4);
 }
 
-.hidden-img {
-    display: none !important;
-}
-
-/* NA TELEFONACH (Zostają obok siebie, tylko zmniejszamy odstęp) */
-@media (max-width: 650px) {
-    .custom-inline-gallery {
-        gap: 0.5rem !important; /* Mniejsza szpara na małym ekranie */
+@media (max-width: 768px) {
+    .gallery {
+        gap: 0.5rem;
     }
-    .more-overlay span {
+
+    .gallery-more {
         font-size: 1.8rem;
     }
 }
 
 /* =========================================
-   NOWY, GLOBALNY LIGHTBOX (STRZAŁKI)
+   LIGHTBOX (<dialog>, js/lightbox.js)
 ========================================= */
-.custom-lightbox-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.93);
-    backdrop-filter: blur(6px);
-    z-index: 99999;
-    display: none;
+.lightbox {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    overflow: hidden;
+}
+
+.lightbox[open] {
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.custom-lightbox-overlay.active {
-    display: flex;
+.lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.93);
+    backdrop-filter: blur(6px);
 }
 
-.custom-lightbox-image {
+.lightbox-image {
     max-width: 85%;
     max-height: 85vh;
-    border-radius: 6px;
     border: 1px solid var(--color-border);
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    border-radius: 6px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
     object-fit: contain;
 }
 
-.custom-lightbox-btn {
+.lightbox-close,
+.lightbox-prev,
+.lightbox-next {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
+    padding: 1rem 1.5rem;
     border: none;
-    color: rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: var(--font-main);
     font-size: 3.5rem;
+    line-height: 1;
     cursor: pointer;
-    padding: 1.5rem;
-    transition: all 0.2s ease;
-    z-index: 100001;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 
-.custom-lightbox-btn:hover {
+.lightbox-close:hover,
+.lightbox-prev:hover,
+.lightbox-next:hover,
+.lightbox-close:focus-visible,
+.lightbox-prev:focus-visible,
+.lightbox-next:focus-visible {
     color: var(--color-primary-blue);
     text-shadow: 0 0 15px var(--color-primary-glow);
 }
 
-.custom-lightbox-prev { left: 20px; }
-.custom-lightbox-next { right: 20px; }
+.lightbox-close { top: 1rem; right: 1.5rem; }
+.lightbox-prev { top: 50%; left: 1rem; transform: translateY(-50%); }
+.lightbox-next { top: 50%; right: 1rem; transform: translateY(-50%); }
 
-.custom-lightbox-close {
-    position: absolute;
-    top: 20px;
-    right: 35px;
-    font-size: 3.5rem;
-    color: rgba(255, 255, 255, 0.6);
-    cursor: pointer;
-    line-height: 1;
-    z-index: 100002;
+/* A single image has nothing to page through. */
+.lightbox[data-single] .lightbox-prev,
+.lightbox[data-single] .lightbox-next {
+    display: none;
 }
 
-.custom-lightbox-close:hover {
-    color: var(--color-primary-blue);
-}
-
-/* RESPONSIVE: Na telefonach i tabletach zdjęcia spadają jedno pod drugie i odzyskują pełny rozmiar */
-@media (max-width: 800px) {
-    .custom-inline-gallery {
-        flex-direction: column !important;
+@media (max-width: 768px) {
+    .lightbox-prev,
+    .lightbox-next {
+        padding: 0.5rem;
+        font-size: 2.5rem;
     }
-    
-    .custom-img-wrapper {
-        flex: auto !important; /* KLUCZ: Resetuje ucięcie do 0 pikseli */
-        width: 100% !important;
-        margin-bottom: 1rem;
+
+    .lightbox-image {
+        max-width: 95%;
     }
-}
-/* =========================================
-   ZABEZPIECZENIE PRZED MARKDOWNEM
-========================================= */
-.custom-inline-gallery > p,
-.custom-inline-gallery > br {
-    display: contents !important;
 }
 
 /* =========================================
@@ -936,3 +804,15 @@ html, body, .site-main {
     background: rgba(15, 73, 190, 0.05);
 }
 
+
+/* Standalone images in a post open in the lightbox. */
+.post-content p > picture img,
+.post-content p > img {
+    cursor: zoom-in;
+}
+.printables-brand {
+    margin-right: 5px;
+    color: #fa6831;
+    font-family: sans-serif;
+    font-weight: bold;
+}

@@ -1,5 +1,5 @@
 ---
-layout: "layouts/post.html"
+layout: post
 tags: ["post"]
 title: "IcePi Zero dev Extension"
 date: "2026-08-13"
@@ -12,8 +12,7 @@ hide_image: true
 This is a documentation for a development extension that I made for [IcePi Zero FPGA](https://github.com/cheyao/icepi-zero). Below you can find a github repository of this project along side the kicad files and a demo code for [IceStudio](https://icestudio.io/) (*if you are using IceStudio, make sure to have version 1.0 or later*)
 
 ## Git repo :)
-{% set repo = "otho-dll/IcePiZero-devExtension" %}
-{% include "partials/github-card.njk" %}
+{% githubCard "otho-dll/IcePiZero-devExtension" %}
 
 ## Pin Assignment
 <details class="custom-table-accordion">
@@ -49,7 +48,7 @@ This is a documentation for a development extension that I made for [IcePi Zero 
 | GPIO27 | IO27 | Button - Bottom right |
 
 __*Displays pin asignment below__ _(generated using Google's Gemini)_
-![alt text](/images/blog/icePiExtension/dispPin.png)
+![Display pin assignment on the dev extension](/images/blog/icePiExtension/dispPin.png)
 
 </details>
 
@@ -70,7 +69,5 @@ __*Displays pin asignment below__ _(generated using Google's Gemini)_
 | Resistor | 10 | 2 | 0603 | R5, R7 |
 
 ## Wiring diagram
-{% set title = "Wiring diagram" %}
-{% set url = "/blog/data/icePiZero-devExtension-schematic-rev2.pdf" %}
-{% include "partials/pdf-embed.njk" %}
+{% pdfEmbed "/blog/data/icePiZero-devExtension-schematic-rev2.pdf", "Wiring diagram" %}
 

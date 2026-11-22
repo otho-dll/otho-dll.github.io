@@ -1,5 +1,5 @@
 ---
-layout: "layouts/post.html"
+layout: post
 tags: ["post"]
 title: "How to setup and use IcePi Zero FPGA"
 date: "2026-07-02"
@@ -17,19 +17,16 @@ In this tutorial I will help you get your IcePi Zero setup and working on Window
 - Open [this website](https://ofl.trabucayre.com/) use **CHROME!**
 2. Open zadig, select IcePi zero (you might need to select `list all devices` in options) and replace driver with WinUSB  
 
-{% set images = ["/images/blog/howToIcePi/images/1.png", "/images/blog/howToIcePi/images/2.png"] %}
-{% include "partials/inline-images.njk" %}
+{% gallery ["/images/blog/howToIcePi/images/1.png", "/images/blog/howToIcePi/images/2.png"] %}
 
 3. Unplug the board for a few seconds
 4. Open the website, in automatic operations select IcePi Zero and the demo file fire-v.bit   
 
-{% set images = ["/images/blog/howToIcePi/images/3.png", "/images/blog/howToIcePi/images/5.png"] %}
-{% include "partials/inline-images.njk" %}
+{% gallery ["/images/blog/howToIcePi/images/3.png", "/images/blog/howToIcePi/images/5.png"] %}
 
 5. Upload, If you have done everything right you should see information about successful upload!  
  
-{% set images = ["/images/blog/howToIcePi/images/4.png"] %}
-{% include "partials/inline-images.njk" %}
+{% gallery ["/images/blog/howToIcePi/images/4.png"] %}
 
 
 ## Programming IcePi Zero
@@ -39,19 +36,14 @@ There are multiple ways to program FPGA boards, especially ones like IcePi Zero.
 <br><br>
 When you download IceStudio v1.0 or higher It's pretty straight forward from there. Just follow the installation guide (screenshots below :) ) and upload a test code. Icestudio might not recognize the board at first but It should upload without a problem and you should see your board blinking.
 
-{% set images = ["/images/blog/howToIcePi/images/6.png", "/images/blog/howToIcePi/images/7.png", "/images/blog/howToIcePi/images/8.png", "/images/blog/howToIcePi/images/9.png", "/images/blog/howToIcePi/images/10.png"] %}
-{% include "partials/inline-images.njk" %}
+{% gallery ["/images/blog/howToIcePi/images/6.png", "/images/blog/howToIcePi/images/7.png", "/images/blog/howToIcePi/images/8.png", "/images/blog/howToIcePi/images/9.png", "/images/blog/howToIcePi/images/10.png"] %}
 
 <br><br>
 If you want to print the same case as on this blog's picture, it is avaiable below:
 
-{% set title = "IcePi Zero Case" %}
-{% set desc = "Custom 3D printed case for the IcePi Zero FPGA board" %}
-{% set url = "https://www.printables.com/model/1774644-icepi-zero-case-housing" %}
-{% include "partials/printables-card.njk" %}
+{% printablesCard "https://www.printables.com/model/1774644-icepi-zero-case-housing", "IcePi Zero Case", "Custom 3D printed case for the IcePi Zero FPGA board" %}
 
-{% set repo = "otho-dll/IcePiZero-case" %}
-{% include "partials/github-card.njk" %}
+{% githubCard "otho-dll/IcePiZero-case" %}
 
 #### Thank you for reading! I hope I helped a little :)  
 #### ~Simon

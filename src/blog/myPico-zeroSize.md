@@ -1,5 +1,5 @@
 ---
-layout: "layouts/post.html"
+layout: post
 tags: ["post"]
 title: "ANUlab Z-Blade"
 date: "2026-08-30"
@@ -12,8 +12,7 @@ This is a documentation for my custom Pi Pico 2W made using [Raspberry Pi's Hard
 
 
 ## Git repo :)
-{% set repo = "otho-dll/ANUlab_Z-Blade" %}
-{% include "partials/github-card.njk" %}
+{% githubCard "otho-dll/ANUlab_Z-Blade" %}
 
 ## Buttons
 - **Bootsel** button - press while plugging in to enable mass storage mode
@@ -23,8 +22,8 @@ This is a documentation for my custom Pi Pico 2W made using [Raspberry Pi's Hard
 <details class="custom-table-accordion">
 <summary> Boards Pinout </summary>
 
-![alt text](/images/blog/customPicoZero/pinoutBoard.png)
-![alt text](/images/blog/customPicoZero/pinout.jpeg)
+![Z-Blade board pinout](/images/blog/customPicoZero/pinoutBoard.png)
+![Pi Pico 2W pinout reference](/images/blog/customPicoZero/pinout.jpeg)
 _(Pinout assignment graphic generated using Google's Gemini)_
 
 </details>
@@ -63,6 +62,4 @@ __*(D)o (N)ot (P)opulate__
 </details>
 
 ## Wiring diagram
-{% set title = "Wiring diagram" %}
-{% set url = "/blog/data/customPico-schematic-rev2.pdf" %}
-{% include "partials/pdf-embed.njk" %}
+{% pdfEmbed "/blog/data/customPico-schematic-rev2.pdf", "Wiring diagram" %}

@@ -1,5 +1,4 @@
 ---
-tags: ["project"]
 title: "ABB Robot model"
 description: "An almost perfect representation of an educational robotics setup made in ABB's robot studio featuring working indicator LEDs like on a real thing. Created as a project for my school."
 link: "https://github.com/otho-dll/IRB1100-Project"

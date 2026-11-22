@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	{%- set pageTitle = title if title == site.name else site.name + " • " + title %}
+	{%- set pageDescription = description or site.description %}
+	{%- set socialImage = (image or site.image) | ogImage %}
+	<title>{{ pageTitle }}</title>
+	<meta name="description" content="{{ pageDescription }}">
+	<link rel="canonical" href="{{ page.url | absoluteUrl(site.url) }}">
+
+	<meta property="og:type" content="{{ 'article' if layout == 'post' else 'website' }}">
+	<meta property="og:site_name" content="{{ site.name }}">
+	<meta property="og:title" content="{{ title }}">
+	<meta property="og:description" content="{{ pageDescription }}">
+	<meta property="og:url" content="{{ page.url | absoluteUrl(site.url) }}">
+	<meta property="og:image" content="{{ socialImage | absoluteUrl(site.url) }}">
+	<meta name="twitter:card" content="summary_large_image">
+
+	<link rel="icon" type="image/png" href="/images/favicon.png">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap">
+
+	<link rel="stylesheet" href="{{ '/css/style.css' | versioned }}">
+	<link rel="stylesheet" href="{{ '/css/partials/header.css' | versioned }}">
+	<link rel="stylesheet" href="{{ '/css/partials/footer.css' | versioned }}">
+	{%- block head %}{% endblock %}
+
+	<script type="module" src="{{ '/js/main.js' | versioned }}"></script>
+</head>
+<body>
+	{% include "partials/header.njk" %}
+	<main class="site-main">
+		{% block content %}{% endblock %}
+	</main>
+	{% include "partials/footer.njk" %}
+</body>
+</html>

@@ -104,3 +104,7 @@ body {
         scroll-snap-type: none; 
     }
 }
+/* Images are wrapped in <picture> by the build; let the <img> lay out as if it were a direct child. */
+picture {
+    display: contents;
+}

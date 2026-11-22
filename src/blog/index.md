@@ -1,4 +1,4 @@
 ---
-layout: 'layouts/blog.html'
+layout: blog
 title: 'My Blog'
 ---

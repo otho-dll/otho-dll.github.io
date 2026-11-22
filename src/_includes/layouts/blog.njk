@@ -1,0 +1,42 @@
+{% extends "layouts/base.njk" %}
+
+{% block head %}
+	<link rel="stylesheet" href="{{ '/css/blog.css' | versioned }}">
+{% endblock %}
+
+{% block content %}
+<section class="blog-list-section">
+	<div class="content">
+		<h1 class="main-blog-title">{{ title }}</h1>
+
+		<div class="blog-grid">
+			{%- for group in collections.postsByYear %}
+			<div class="year-divider">
+				<h2>{{ group.year }}</h2>
+			</div>
+
+			{%- for item in group.posts %}
+			{%- set post = item.post %}
+			<article class="blog-card card-{{ item.side }}">
+				<div class="blog-image">
+					<img src="{{ post.data.image }}" alt="" sizes="(max-width: 1200px) 100vw, 540px">
+				</div>
+				<div class="blog-info">
+					<time class="card-date" datetime="{{ post.date | isoDate }}">{{ post.date | readableDate }}</time>
+					<h3 class="post-title">{{ post.data.title }}</h3>
+					<p>{{ post.data.description }}</p>
+					<div class="blog-tags">
+						{%- for tag in post.data.article_tags %}
+						<span class="tag">{{ tag }}</span>
+						{%- endfor %}
+					</div>
+					{# The ::after of this link stretches over the whole card, making it clickable. #}
+					<a href="{{ post.url }}" class="card-btn">Read More <span class="arrow" aria-hidden="true">&rarr;</span></a>
+				</div>
+			</article>
+			{%- endfor %}
+			{%- endfor %}
+		</div>
+	</div>
+</section>
+{% endblock %}

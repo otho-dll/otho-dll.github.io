@@ -860,3 +860,26 @@
         display: none; 
     }
 }
+/* =========================================
+   SCROLLING PROJECT TITLES (js/modules/title-marquee.js)
+========================================= */
+.project-card h3.is-marquee {
+    text-align: left;
+}
+
+.marquee-track {
+    display: inline-flex;
+    animation: marquee var(--marquee-duration, 10s) linear infinite;
+}
+
+.marquee-track > span {
+    padding-right: 3rem;
+}
+
+@keyframes marquee {
+    to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
+}

@@ -1,0 +1,43 @@
+{% extends "layouts/base.njk" %}
+
+{% block head %}
+	<link rel="stylesheet" href="{{ '/css/post.css' | versioned }}">
+{% endblock %}
+
+{% block content %}
+<section class="post-section">
+	<div class="content post-container">
+		<a href="/blog/" class="back-btn"><span class="arrow" aria-hidden="true">&larr;</span> Back to Blog</a>
+
+		<header class="post-header">
+			<h1 class="highlight">{{ title }}</h1>
+			<time class="post-date" datetime="{{ page.date | isoDate }}">{{ page.date | readableDate }}</time>
+
+			{%- if image and not hide_image %}
+			<div class="post-hero-image">
+				<img src="{{ image }}" alt="" loading="eager" sizes="(max-width: 900px) 100vw, 900px">
+			</div>
+			{%- endif %}
+		</header>
+
+		<article class="post-content">
+			{{ content | safe }}
+
+			{%- if gallery %}
+			<section class="post-gallery-section">
+				<h2>Project Gallery</h2>
+				{% gallery gallery %}
+			</section>
+			{%- endif %}
+		</article>
+	</div>
+</section>
+
+{# Shared image viewer for every gallery on the page (js/lightbox.js). #}
+<dialog class="lightbox" aria-label="Image viewer">
+	<button type="button" class="lightbox-close" aria-label="Close">&times;</button>
+	<button type="button" class="lightbox-prev" aria-label="Previous image">&#10094;</button>
+	<img class="lightbox-image" src="" alt="" eleventy:ignore>
+	<button type="button" class="lightbox-next" aria-label="Next image">&#10095;</button>
+</dialog>
+{% endblock %}

@@ -24,20 +24,20 @@
 		},
 		{
 			"text": "About Me",
-			"url": "#about"
+			"url": "/#about"
 		},
 		{
 			"text": "My Projects",
-			"url": "#projects"
+			"url": "/#projects"
 		},
 		{
 			"text": "Contact",
-			"url": "#contact"
+			"url": "/#contact"
 		}
 	],
 	"logo": {
 		"src": "/images/logo.png",
-		"alt": "My Logo",
+		"alt": "ANUlab",
 		"url": "/"
 	}
 }
