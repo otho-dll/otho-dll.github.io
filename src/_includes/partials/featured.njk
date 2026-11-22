@@ -1,0 +1,21 @@
+{#
+	Featured project tile. Content and colors come from `featured` in src/content/settings.yml,
+	so a different project can be swapped in without touching this file.
+	The tile keeps its own colors in both site themes.
+#}
+{%- set f = settings.featured %}
+<a class="tile featured featured--{{ f.layout }}" href="{{ f.url }}" target="_blank" rel="noopener noreferrer"
+	style="--featured-bg: {{ f.colors.background }}; --featured-text: {{ f.colors.text }}; --featured-accent: {{ f.colors.accent }}; --featured-accent-2: {{ f.colors.accent_2 }};">
+	{%- if f.image %}
+	<div class="featured-image">
+		<img src="{{ f.image }}" alt="{{ f.image_alt }}" sizes="(max-width: 768px) 60vw, 280px">
+	</div>
+	{%- endif %}
+	<div class="featured-body">
+		<p class="featured-label">{{ f.label }}</p>
+		<h2 class="featured-title">{{ f.title }}</h2>
+		{%- if f.tagline %}<p class="featured-tagline">{{ f.tagline }}</p>{% endif %}
+		{%- if f.text %}<p class="featured-text">{{ f.text }}</p>{% endif %}
+		<span class="featured-button">{{ f.button }} <span aria-hidden="true">↗</span></span>
+	</div>
+</a>

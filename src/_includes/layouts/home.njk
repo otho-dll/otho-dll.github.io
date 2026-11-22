@@ -1,10 +1,11 @@
 {% extends "layouts/base.njk" %}
+{#- Home page. All texts and options: src/content/settings.yml. Styles: css/home.css. -#}
 
 {% block head %}
 	<link rel="stylesheet" href="{{ '/css/home.css' | versioned }}">
 {% endblock %}
 
-{#- One lab log entry: a post, a project, or a project together with its write-up post. -#}
+{#- One Maker log entry: a post, a project, or a project together with its write-up post. -#}
 {% macro logEntry(entry) %}
 	{%- set item = entry.item %}
 	{%- if entry.type == 'post' %}
@@ -17,6 +18,8 @@
 	{%- else %}
 		{%- set url = '' %}
 	{%- endif %}
+	{#- Tags: the project's own, else those of its write-up post. #}
+	{%- set tags = item.data.article_tags or (entry.post.data.article_tags if entry.post else []) %}
 	<article class="log-entry log-entry--{{ entry.type }}">
 		{%- if entry.date %}
 		<time class="log-date" datetime="{{ entry.date | isoDate }}">{{ (entry.date | readableDate).slice(0, 6) }}</time>
@@ -28,12 +31,17 @@
 			<div class="log-body">
 				<p class="log-meta">
 					{%- if entry.type == 'post' %}<span class="log-type log-type--post">Post</span>
-					{%- else %}<span class="log-type">Project</span>{% if entry.post %}<span class="log-type log-type--post">Post</span>{% endif %}
+					{%- else %}<span class="log-type log-type--project">Project</span>{% if entry.post %}<span class="log-type log-type--post">Post</span>{% endif %}
 					{%- endif %}
 					{%- if entry.date %}<span class="log-date-inline">{{ entry.date | readableDate }}</span>{% endif %}
 				</p>
 				<h4>{{ item.data.title }}</h4>
 				<p class="muted clamp">{{ item.data.description }}</p>
+				{%- if tags and tags.length %}
+				<ul class="log-tags" aria-label="Tags">
+					{%- for tag in tags %}<li>{{ tag }}</li>{% endfor %}
+				</ul>
+				{%- endif %}
 				{%- if url %}
 				<a class="arrow-link" href="{{ url }}"{% if external %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ linkText }}</a>
 				{%- endif %}
@@ -46,32 +54,66 @@
 {% endmacro %}
 
 {% block content %}
-<div class="home">
+{%- set featuredLayout = settings.featured.layout if settings.featured.show else 'none' %}
+<div class="home featured-is-{{ featuredLayout }}">
 	<div class="bento">
 
 		<section class="tile bento-hero" id="welcome">
-			<p class="hero-greeting">{{ home.greeting }}</p>
-			<h1 class="hero-name">{{ home.name }}</h1>
+			<p class="hero-greeting">{{ settings.greeting }}</p>
+			<h1 class="hero-name">{{ settings.name }}</h1>
 			{# Roles are typed out by js/modules/typing.js; the first one is rendered for no-JS visitors. #}
-			<p class="hero-role" data-roles="{{ home.roles | dump }}">
-				<span class="typing-text">{{ home.roles[0] }}</span><span class="cursor" aria-hidden="true">|</span>
+			<p class="hero-role" data-roles="{{ settings.roles | dump }}">
+				<span class="typing-text">{{ settings.roles[0] }}</span><span class="cursor" aria-hidden="true">|</span>
 			</p>
-			<p class="hero-intro">{{ home.intro }}</p>
-			<div class="hero-actions">
-				<a class="pill-btn pill-btn--solid" href="#projects">Projects <span aria-hidden="true">↓</span></a>
-				<a class="pill-btn" href="/blog/">Blog <span aria-hidden="true">→</span></a>
-			</div>
+			<p class="hero-intro">{{ settings.intro }}</p>
 		</section>
 
 		<div class="tile bento-photo">
-			<img src="{{ home.photo }}" alt="{{ home.photoAlt }}" loading="eager" fetchpriority="high" sizes="(max-width: 1024px) 100vw, 400px">
+			<img src="{{ settings.photo }}" alt="{{ settings.photo_alt }}" loading="eager" fetchpriority="high" sizes="(max-width: 1024px) 100vw, 400px">
 		</div>
 
-		{#- Lab log: one tab per year (js/modules/tabs.js). Without JS all years are listed. -#}
-		{%- set log = collections.labLog %}
+		{%- for block in settings.about %}
+		<section class="tile bento-about"{% if loop.first %} id="about"{% endif %}>
+			<h2 class="tile-title">{{ block.title }}</h2>
+			<p class="muted">{{ block.text }}</p>
+		</section>
+		{%- endfor %}
+
+		{%- if featuredLayout == 'compact' %}
+		{% include "partials/featured.njk" %}
+		{%- endif %}
+
+		<section class="tile bento-social" id="contact">
+			<h2 class="tile-title">{{ settings.social_title }}</h2>
+			<p class="muted">{{ settings.social_intro }}</p>
+			<div class="social-links">
+				{%- for link in settings.social %}
+				{%- if link.copy %}
+				<button type="button" class="social-link" data-copy="{{ link.handle }}" aria-label="Copy {{ link.name }}: {{ link.handle }}">
+				{%- else %}
+				{%- set external = link.url.startsWith('http') %}
+				<a class="social-link" href="{{ link.url }}"{% if external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+				{%- endif %}
+					<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="{{ link.icon }}"/></svg>
+					<span class="social-link-text">
+						<span class="social-link-name">{{ link.name }}</span>
+						<span{% if link.copy %} data-copy-label{% endif %}>{{ link.handle }}</span>
+					</span>
+					<span class="social-link-hint" aria-hidden="true">{{ 'copy' if link.copy else '↗' }}</span>
+				{%- if link.copy %}</button>{% else %}</a>{% endif %}
+				{%- endfor %}
+			</div>
+		</section>
+
+		{%- if featuredLayout == 'wide' %}
+		{% include "partials/featured.njk" %}
+		{%- endif %}
+
+		{#- Maker log: one tab per year (js/modules/tabs.js). Without JS all years are listed. -#}
+		{%- set log = collections.makerLog %}
 		<section class="tile bento-log" id="projects" aria-labelledby="log-title" data-tabs>
 			<div class="log-head">
-				<h2 class="tile-title" id="log-title">Lab log</h2>
+				<h2 class="tile-title" id="log-title">{{ settings.maker_log_title }}</h2>
 				<div class="log-tabs" role="tablist" aria-label="Year">
 					{%- for group in log.years %}
 					<button type="button" role="tab" id="log-tab-{{ group.year }}" aria-controls="log-{{ group.year }}" aria-selected="{{ 'true' if loop.first else 'false' }}">{{ group.year }}</button>
@@ -99,40 +141,6 @@
 				{%- endfor %}
 			</div>
 			{%- endif %}
-		</section>
-
-		{%- for block in home.about %}
-		<section class="tile bento-about"{% if loop.first %} id="about"{% endif %}>
-			<h2 class="tile-title">{{ block.title }}</h2>
-			<p class="muted">{{ block.text }}</p>
-		</section>
-		{%- endfor %}
-
-		<a class="tile tile--link bento-tycho" href="{{ home.tycho.url }}" target="_blank" rel="noopener noreferrer">
-			<p class="tile-label">Side project</p>
-			<strong>{{ home.tycho.title }}</strong>
-			<p class="muted">{{ home.tycho.text }}</p>
-			<span class="arrow-link">Visit ↗</span>
-		</a>
-
-		<section class="tile bento-social" id="contact">
-			<h2 class="tile-title">Social</h2>
-			<p class="muted">{{ home.socialIntro }}</p>
-			<div class="social-links">
-				<button type="button" class="social-link" data-copy="{{ home.discord }}" aria-label="Copy Discord username {{ home.discord }}">
-					<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-					<span class="social-link-text"><span class="social-link-name">Discord</span><span data-copy-label>{{ home.discord }}</span></span>
-					<span class="social-link-hint" aria-hidden="true">copy</span>
-				</button>
-				{%- for link in social %}
-				{%- set external = link.url.startsWith('http') %}
-				<a class="social-link" href="{{ link.url }}"{% if external %} target="_blank" rel="noopener noreferrer"{% endif %}>
-					<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="{{ link.icon_path }}"/></svg>
-					<span class="social-link-text"><span class="social-link-name">{{ link.name }}</span><span>{{ link.handle }}</span></span>
-					<span class="social-link-hint" aria-hidden="true">↗</span>
-				</a>
-				{%- endfor %}
-			</div>
 		</section>
 
 	</div>

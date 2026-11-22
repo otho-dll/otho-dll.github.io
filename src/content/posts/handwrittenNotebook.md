@@ -1,6 +1,4 @@
 ---
-layout: post
-tags: ["post"]
 title: "The best app for handwritten notes"
 date: "2026-11-06"
 description: "I have made an extension for Obsidian and in my (subjective) opinion It's the best app for handwritten notes!"

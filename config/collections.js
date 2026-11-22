@@ -21,13 +21,13 @@ export default function collections(eleventyConfig) {
 		}));
 	});
 
-	// "Lab log" on the home page: posts and projects on one timeline, newest first, grouped by year.
+	// "Maker log" on the home page: posts and projects on one timeline, newest first, grouped by year.
 	//
 	// Entry shape: { type: 'post' | 'project', item, post?, date }
 	// - A project whose `link` points to a blog post absorbs that post: one entry with `post` set,
 	//   and the post isn't listed on its own. Its date is the project's `date:`, else the post's.
 	// - Other projects need a `date:` in their front matter; without one they're returned as `undated`.
-	eleventyConfig.addCollection('labLog', (api) => {
+	eleventyConfig.addCollection('makerLog', (api) => {
 		const posts = api.getFilteredByTag('post').filter((item) => !item.data.draft);
 		const postsByUrl = new Map(posts.map((post) => [post.url, post]));
 		const projects = api.getFilteredByTag('project');

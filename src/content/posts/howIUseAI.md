@@ -1,6 +1,4 @@
 ---
-layout: post
-tags: ["post"]
 title: "How I use AI"
 date: "2026-06-01"
 description: "An honest confession on my AI usage"

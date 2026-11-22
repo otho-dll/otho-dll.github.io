@@ -1,6 +1,4 @@
 ---
-layout: post
-tags: ["post"]
 title: "How to make your own Pi Pico"
 date: "2026-09-02"
 description: "I have built my own Raspberry Pi Pico. and you can to!"

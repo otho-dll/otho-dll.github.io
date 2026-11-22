@@ -7,7 +7,8 @@
 {% block content %}
 <section class="post-section">
 	<div class="content post-container">
-		<a href="/blog/" class="back-btn"><span class="arrow" aria-hidden="true">&larr;</span> Back to Blog</a>
+		{# The /blog/ list is switched off (src/blog/index.md); posts are listed in the Maker log. #}
+		<a href="/#projects" class="back-btn"><span class="arrow" aria-hidden="true">&larr;</span> Back to {{ settings.maker_log_title }}</a>
 
 		<header class="post-header">
 			<h1 class="highlight">{{ title }}</h1>

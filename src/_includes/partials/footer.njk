@@ -1,20 +1,22 @@
-<footer class="siteFooter">
-	<div class="footer-bg-layer layer-1" aria-hidden="true"></div>
-	<div class="footer-bg-layer layer-2" aria-hidden="true"></div>
-	<div class="footer-bg-layer layer-3" aria-hidden="true"></div>
+{# Footer: one tile in the same grid width as the page. Texts come from settings.yml (footer). #}
+<footer class="site-footer">
+	<div class="footer-tile">
+		<a class="footer-logo" href="/" aria-label="{{ settings.site.name }} home">
+			<img src="{{ settings.site.logo }}" alt="" sizes="120px">
+		</a>
 
-	<ul class="footer-links">
-		{%- for item in navigation.itemsFooter %}
-		<li>
-			<a href="{{ item.url }}"{{ helpers.getLinkActiveState(item.url, page.url) | safe }}>{{ item.text }}</a>
-		</li>
-		{%- endfor %}
-	</ul>
+		<nav class="footer-links" aria-label="Footer">
+			<a href="/">Home</a>
+			<a href="/#about">About</a>
+			<a href="/#contact">{{ settings.social_title }}</a>
+			<a href="/#projects">{{ settings.maker_log_title }}</a>
+		</nav>
 
-	<div class="footer-bottom">
-		<p>Made with <span class="heart">💛</span> by Simon</p>
-		<p>Copyright &copy; 2024-{{ site.year }} Szymon Glinka</p>
-		<p>This site does NOT use cookies for tracking or collect your personal information.</p>
-		<p>This site has been made with the help of AI</p>
+		<div class="footer-meta">
+			<p>Made with <span class="heart" aria-label="love">💛</span> by {{ settings.name }} · &copy; {{ settings.footer.since }}–{{ site.year }} {{ settings.footer.owner }}</p>
+			{%- for note in settings.footer.notes %}
+			<p>{{ note }}</p>
+			{%- endfor %}
+		</div>
 	</div>
 </footer>

@@ -1,22 +1,68 @@
 /* Global tokens and base styles, loaded on every page. */
 
-:root {
-    /* Colors */
-    --accent: #0f49be;
-    --accent-glow: color-mix(in srgb, var(--accent) 40%, transparent);
-    --accent-glow-strong: color-mix(in srgb, var(--accent) 60%, transparent);
-    --accent-tint: color-mix(in srgb, var(--accent) 10%, transparent);
+/* =========================================
+   COLORS
+   Dark theme is the default. The light theme is selected by data-theme="light" on <html>,
+   set before first paint by the inline script in base.njk (saved choice, else system setting).
+========================================= */
+:root,
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --page-bg: #121316;          /* shown until the WebGL background is ready */
+
+    --accent: #0f49be;           /* main blue */
+    --accent-2: #d6c78f;         /* washed-out yellow, used sparingly */
 
     --text: #ffffff;
     --text-muted: #cccccc;
     --text-dim: #e0e0e0;
-    --text-bold: #ffcc00;      /* **bold** in posts */
-    --text-italic: #00e5ff;    /* *italic* in posts */
-    --text-emphasis: #fa6831;  /* ***bold italic*** in posts */
-    --success: #2ecc71;
+    --text-bold: #ffcc00;        /* **bold** in posts */
 
-    --surface: rgba(20, 20, 20, 0.7);
+    --surface: rgba(20, 20, 20, 0.7);         /* tiles, cards */
+    --surface-strong: rgba(15, 15, 15, 0.85); /* collapsible boxes in posts */
+    --surface-bar: rgba(20, 20, 20, 0.9);     /* their title bars when open */
+    --surface-embed: rgba(20, 20, 20, 0.8);   /* GitHub/Printables cards */
+    --surface-inset: rgba(0, 0, 0, 0.22);     /* boxes inside a tile */
+    --table-bg: rgba(10, 10, 10, 0.4);
+    --code-bg: rgba(20, 20, 20, 0.9);
+    --pre-bg: rgba(10, 10, 10, 0.9);
+    --pdf-bg: #222;
+    --hover-tint: rgba(255, 255, 255, 0.03);
     --border: rgba(255, 255, 255, 0.15);
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+
+    --page-bg: #e6e3dc;
+
+    --accent: #0f49be;
+    --accent-2: #8a7428;         /* darker on light backgrounds for contrast */
+
+    --text: #16181d;
+    --text-muted: #474c56;
+    --text-dim: #2b2f36;
+    --text-bold: #8a6400;
+
+    --surface: rgba(255, 255, 255, 0.72);
+    --surface-strong: rgba(255, 255, 255, 0.85);
+    --surface-bar: rgba(244, 243, 240, 0.95);
+    --surface-embed: rgba(255, 255, 255, 0.8);
+    --surface-inset: rgba(0, 0, 0, 0.04);
+    --table-bg: rgba(255, 255, 255, 0.6);
+    --code-bg: rgba(0, 0, 0, 0.06);
+    --pre-bg: rgba(0, 0, 0, 0.05);
+    --pdf-bg: #d9d9d9;
+    --hover-tint: rgba(0, 0, 0, 0.035);
+    --border: rgba(0, 0, 0, 0.14);
+}
+
+:root {
+    --accent-glow: color-mix(in srgb, var(--accent) 40%, transparent);
+    --accent-glow-strong: color-mix(in srgb, var(--accent) 60%, transparent);
+    --accent-tint: color-mix(in srgb, var(--accent) 10%, transparent);
+    --success: #2ecc71;
 
     /* Corner radius of home page tiles, and of images inside them */
     --radius-tile: 3px;
@@ -61,7 +107,8 @@ body {
     flex-direction: column;
     min-height: 100vh;
     /* Shown until (or instead of) the WebGL background: the agate's base color. */
-    background: #121316;
+    background: var(--page-bg);
+    color: var(--text);
 }
 
 /* Procedural background (js/modules/background.js). Sized to the largest viewport (lvh),

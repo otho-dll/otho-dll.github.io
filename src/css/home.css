@@ -1,14 +1,15 @@
-/* Home page: bento grid of tiles (hero, photo, lab log, about, Tycho, social). */
+/* Home page: bento grid — intro + photo, about, social, featured project, Maker log.
+   Color roles: blue (--accent) for the name, links and active controls;
+   washed-out yellow (--accent-2) for headings, dates and labels. */
 
 /* =========================================
-   GRID
-   12 columns on desktop; tiles span whole rows on tablets and phones.
+   GRID (12 columns on desktop)
 ========================================= */
 .home {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 3rem 2rem 5rem;
+    padding: 2rem 2rem 2rem;
     color: var(--text);
 }
 
@@ -25,10 +26,13 @@
 
 .bento > * { grid-column: span 12; }
 
-.bento-hero   { grid-column: span 8; grid-row: span 2; }
-.bento-photo  { grid-column: span 4; grid-row: span 2; }
-.bento-about,
-.bento-tycho  { grid-column: span 4; }
+.bento-hero  { grid-column: span 8; grid-row: span 2; }
+.bento-photo { grid-column: span 4; grid-row: span 2; }
+.bento-about { grid-column: span 6; }
+
+/* Featured project in the "compact" layout shares the about row. */
+.featured-is-compact .bento-about,
+.featured--compact { grid-column: span 4; }
 
 /* =========================================
    TILES
@@ -41,33 +45,12 @@
     background-color: var(--surface);
 }
 
-.tile--link {
-    color: inherit;
-    text-decoration: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.tile--link:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 15px var(--accent-tint);
-    transform: translateY(-3px);
-}
-
 .tile-title {
     margin: 0 0 1rem;
-    color: var(--accent);
+    color: var(--accent-2);
     font-family: var(--font-pixel);
     font-size: 1rem;
     line-height: 1.4;
-}
-
-.tile-label {
-    margin: 0 0 1rem;
-    color: var(--accent);
-    font-family: var(--font-pixel);
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
 }
 
 .muted {
@@ -88,15 +71,15 @@
     color: var(--accent);
     font-weight: var(--fw-semi);
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 .arrow-link:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
+    color: var(--accent-2);
 }
 
 /* =========================================
-   HERO
+   INTRO
 ========================================= */
 .bento-hero {
     display: flex;
@@ -128,6 +111,7 @@
 
 .typing-text,
 .cursor {
+    color: var(--accent-2);
     font-family: var(--font-pixel);
     font-size: 1.3rem;
 }
@@ -138,11 +122,6 @@
     animation: blink 1s step-end infinite;
 }
 
-.text-blue {
-    color: var(--accent);
-    text-shadow: 0 0 20px var(--accent-glow-strong);
-}
-
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
@@ -150,41 +129,10 @@
 
 .hero-intro {
     max-width: 34em;
-    margin: 0 0 1.8rem;
+    margin: 0;
     color: var(--text-muted);
     font-size: 1.1rem;
     line-height: 1.6;
-}
-
-.hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-}
-
-.pill-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.4rem;
-    border: 2px solid var(--accent);
-    border-radius: 50px;
-    color: var(--accent);
-    font-weight: var(--fw-semi);
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.pill-btn:hover {
-    background-color: var(--accent-tint);
-    box-shadow: 0 5px 15px var(--accent-glow);
-    transform: translateY(-2px);
-}
-
-.pill-btn--solid,
-.pill-btn--solid:hover {
-    background-color: var(--accent);
-    color: var(--text);
 }
 
 .bento-photo {
@@ -198,204 +146,6 @@
     height: 100%;
     min-height: 320px;
     object-fit: cover;
-}
-
-/* =========================================
-   LAB LOG
-   Year tabs (js/modules/tabs.js); each entry: date | hexagon on a rail | card.
-========================================= */
-.log-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.log-head .tile-title {
-    margin: 0;
-    font-size: 1.4rem;
-    text-shadow: 0 0 20px var(--accent-glow-strong);
-}
-
-.log-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.log-tabs [role="tab"] {
-    padding: 0.45rem 1rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-tile);
-    background: transparent;
-    color: var(--text-muted);
-    font-family: var(--font-pixel);
-    font-size: 0.7rem;
-    cursor: pointer;
-    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
-}
-
-.log-tabs [role="tab"]:hover {
-    border-color: var(--accent);
-    color: var(--text);
-}
-
-.log-tabs [role="tab"][aria-selected="true"] {
-    border-color: var(--accent);
-    background-color: var(--accent);
-    color: var(--text);
-}
-
-/* Without JS there are no tabs: every year is listed with its own heading. */
-.bento-log:not(.tabs-ready) .log-tabs,
-.bento-log.tabs-ready .log-year {
-    display: none;
-}
-
-.log-year {
-    margin: 1.5rem 0 1rem;
-    color: var(--text-dim);
-    font-family: var(--font-pixel);
-    font-size: 1rem;
-}
-
-.log-entry {
-    display: grid;
-    grid-template-columns: 70px 20px 1fr;
-    gap: 0 1rem;
-}
-
-.log-date {
-    padding-top: 1.3rem;
-    color: var(--accent);
-    font-family: var(--font-pixel);
-    font-size: 0.7rem;
-    line-height: 1.6;
-    text-align: right;
-}
-
-.log-rail {
-    position: relative;
-}
-
-.log-rail::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 1px;
-    background: var(--border);
-}
-
-.log-rail::after {
-    content: "";
-    position: absolute;
-    top: 1.35rem;
-    left: 50%;
-    width: 12px;
-    height: 14px;
-    background: var(--accent);
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    filter: drop-shadow(0 0 8px var(--accent));
-    transform: translateX(-50%);
-}
-
-/* Projects get a quieter node than posts. */
-.log-entry--project .log-rail::after {
-    background: var(--text-dim);
-    filter: none;
-}
-
-.log-card {
-    display: grid;
-    grid-template-columns: 1fr 180px;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 0.75rem;
-    padding: 1rem 1.25rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-tile);
-    background: rgba(0, 0, 0, 0.2);
-    transition: border-color 0.3s ease;
-}
-
-.log-card:hover {
-    border-color: color-mix(in srgb, var(--accent) 60%, transparent);
-}
-
-.log-card img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    border-radius: var(--radius-inner);
-    object-fit: cover;
-}
-
-.log-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem;
-    margin: 0;
-}
-
-.log-type {
-    padding: 3px 8px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-inner);
-    color: var(--text-dim);
-    font-family: var(--font-pixel);
-    font-size: 0.55rem;
-}
-
-.log-type--post {
-    border-color: var(--accent);
-    color: var(--accent);
-}
-
-.log-date-inline {
-    display: none;
-    margin-left: 0.3rem;
-    color: var(--accent);
-    font-size: 0.8rem;
-}
-
-.log-card h4 {
-    margin: 0.6rem 0 0.4rem;
-    font-family: var(--font-pixel);
-    font-size: 0.95rem;
-    line-height: 1.4;
-}
-
-.log-card .muted {
-    margin-bottom: 0.6rem;
-    font-size: 0.95rem;
-}
-
-/* =========================================
-   ABOUT, TYCHO
-========================================= */
-.bento-tycho {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.bento-tycho .tile-label {
-    margin: 0;
-}
-
-.bento-tycho strong {
-    font-family: var(--font-pixel);
-    font-size: 1.1rem;
-    line-height: 1.4;
-}
-
-.bento-tycho .arrow-link {
-    margin-top: auto;
 }
 
 /* =========================================
@@ -420,14 +170,14 @@
     padding: 0.9rem 1.1rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-tile);
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--surface-inset);
     color: var(--text);
     font-family: var(--font-main);
     font-size: 0.9rem;
     text-align: left;
     text-decoration: none;
     cursor: pointer;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .social-link:hover {
@@ -461,7 +211,7 @@
 
 .social-link-name {
     margin-bottom: 0.2rem;
-    color: var(--accent);
+    color: var(--accent-2);
     font-family: var(--font-pixel);
     font-size: 0.6rem;
     text-transform: uppercase;
@@ -475,23 +225,316 @@
 }
 
 /* =========================================
+   FEATURED PROJECT (partials/featured.njk)
+   Colors come from settings.yml and stay the same in both site themes.
+========================================= */
+.featured {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    align-items: center;
+    gap: 2.5rem;
+    padding: 2rem 2.5rem;
+    overflow: hidden;
+    border-color: color-mix(in srgb, var(--featured-accent) 35%, transparent);
+    background: var(--featured-bg);
+    color: var(--featured-text);
+    text-decoration: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.featured:hover {
+    border-color: var(--featured-accent);
+    box-shadow: 0 0 25px color-mix(in srgb, var(--featured-accent) 25%, transparent);
+    transform: translateY(-3px);
+}
+
+.featured-image img {
+    display: block;
+    width: 100%;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
+}
+
+.featured-label {
+    margin: 0 0 0.75rem;
+    color: var(--featured-accent-2);
+    font-family: var(--font-pixel);
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.featured-title {
+    margin: 0 0 0.75rem;
+    color: var(--featured-accent);
+    font-family: var(--font-pixel);
+    font-size: 1.8rem;
+    line-height: 1.3;
+}
+
+.featured-tagline {
+    margin: 0 0 0.5rem;
+    font-size: 1.35rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.featured-text {
+    margin: 0 0 1.5rem;
+    opacity: 0.75;
+    line-height: 1.6;
+}
+
+.featured-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 50px;
+    background: var(--featured-accent-2);
+    color: var(--featured-bg);
+    font-weight: var(--fw-bold);
+}
+
+/* Compact: image on top, centered text. */
+.featured--compact {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 1rem;
+    padding: 1.75rem;
+    text-align: center;
+}
+
+.featured--compact .featured-image {
+    width: 100%;
+    max-width: 190px;
+}
+
+.featured--compact .featured-title { font-size: 1.15rem; }
+.featured--compact .featured-tagline { font-size: 0.95rem; }
+.featured--compact .featured-text { margin-bottom: 1rem; }
+
+/* =========================================
+   MAKER LOG
+   Year tabs (js/modules/tabs.js); each entry: date | hexagon on a rail | card.
+========================================= */
+.log-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.log-head .tile-title {
+    margin: 0;
+    color: var(--accent);
+    font-size: 1.4rem;
+    text-shadow: 0 0 20px var(--accent-glow-strong);
+}
+
+.log-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.log-tabs [role="tab"] {
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-tile);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.log-tabs [role="tab"]:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.log-tabs [role="tab"][aria-selected="true"] {
+    border-color: var(--accent);
+    background-color: var(--accent);
+    color: #fff;
+}
+
+/* Without JS there are no tabs: every year is listed with its own heading. */
+.bento-log:not(.tabs-ready) .log-tabs,
+.bento-log.tabs-ready .log-year {
+    display: none;
+}
+
+.log-year {
+    margin: 1.5rem 0 1rem;
+    color: var(--text-dim);
+    font-family: var(--font-pixel);
+    font-size: 1rem;
+}
+
+.log-entry {
+    display: grid;
+    grid-template-columns: 70px 20px 1fr;
+    gap: 0 1rem;
+}
+
+.log-date {
+    padding-top: 1.3rem;
+    color: var(--accent-2);
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    line-height: 1.6;
+    text-align: right;
+}
+
+.log-rail {
+    position: relative;
+}
+
+.log-rail::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: var(--border);
+}
+
+/* Hexagon node: blue for posts, yellow for projects. */
+.log-rail::after {
+    content: "";
+    position: absolute;
+    top: 1.35rem;
+    left: 50%;
+    width: 12px;
+    height: 14px;
+    background: var(--accent);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    filter: drop-shadow(0 0 8px var(--accent));
+    transform: translateX(-50%);
+}
+
+.log-entry--project .log-rail::after {
+    background: var(--accent-2);
+    filter: none;
+}
+
+.log-card {
+    display: grid;
+    grid-template-columns: 1fr 180px;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 0.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-tile);
+    background: var(--surface-inset);
+    transition: border-color 0.3s ease;
+}
+
+.log-card:hover {
+    border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.log-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-inner);
+    object-fit: cover;
+}
+
+.log-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+}
+
+.log-type {
+    padding: 3px 8px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-inner);
+    color: var(--accent);
+    font-family: var(--font-pixel);
+    font-size: 0.55rem;
+}
+
+.log-type--project {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+}
+
+.log-date-inline {
+    display: none;
+    margin-left: 0.3rem;
+    color: var(--accent-2);
+    font-size: 0.8rem;
+}
+
+.log-card h4 {
+    margin: 0.6rem 0 0.4rem;
+    font-family: var(--font-pixel);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.log-card .muted {
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+}
+
+.log-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0 0 0.7rem;
+    padding: 0;
+    list-style: none;
+}
+
+.log-tags li {
+    padding: 2px 8px;
+    border-radius: var(--radius-inner);
+    background: color-mix(in srgb, var(--accent-2) 14%, transparent);
+    color: var(--accent-2);
+    font-size: 0.75rem;
+}
+
+/* =========================================
    RESPONSIVE
 ========================================= */
 @media (max-width: 1024px) {
     .bento-hero,
     .bento-photo { grid-column: span 12; grid-row: auto; }
     .bento-photo { max-height: 420px; }
-    .bento-about { grid-column: span 6; }
-    .bento-tycho { grid-column: span 12; }
+    .bento-about,
+    .featured-is-compact .bento-about { grid-column: span 6; }
+
+    /* Compact featured tile gets its own row; lay it out horizontally again. */
+    .featured--compact {
+        grid-column: span 12;
+        grid-template-columns: 200px 1fr;
+        justify-items: start;
+        text-align: left;
+    }
+
     .social-links { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
     .home {
-        padding: 2rem 1rem 4rem;
+        padding: 1rem 1rem 1rem;
     }
 
-    .bento-about { grid-column: span 12; }
+    .bento-about,
+    .featured-is-compact .bento-about { grid-column: span 12; }
 
     .bento-hero {
         padding: 1.75rem;
@@ -500,6 +543,23 @@
     .hero-name {
         font-size: 2.4rem;
     }
+
+    .featured,
+    .featured--compact {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 1.25rem;
+        padding: 1.75rem;
+        text-align: center;
+    }
+
+    .featured-image {
+        width: 100%;
+        max-width: 220px;
+    }
+
+    .featured-title { font-size: 1.3rem; }
+    .featured-tagline { font-size: 1.05rem; }
 
     /* Narrow timeline: rail on the left, the date moves into the card. */
     .log-entry { grid-template-columns: 14px 1fr; gap: 0 0.8rem; }

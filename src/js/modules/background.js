@@ -62,12 +62,15 @@ float fbmSmooth(vec2 p) {
 	return value;
 }
 
-// --- Palette (sRGB 0..1), matched to the original photo ---------------------------
-const vec3 BASE       = vec3(0.071, 0.075, 0.086);
-const vec3 BAND_LIGHT = vec3(0.150, 0.157, 0.165);
-const vec3 GOLD       = vec3(0.330, 0.225, 0.105);
-const vec3 GOLD_LIGHT = vec3(0.560, 0.380, 0.160);
-const vec3 COBALT     = vec3(0.075, 0.105, 0.215);
+// --- Palette (sRGB 0..1), set per theme from PALETTES below ---------------------------
+uniform vec3 BASE;
+uniform vec3 BAND_LIGHT;
+uniform vec3 GOLD;
+uniform vec3 GOLD_LIGHT;
+uniform vec3 COBALT;
+uniform float VIGNETTE;
+uniform float SHADING;    // 1 = full light/dark variation along the bands, lower = flatter
+uniform float BAND_DEPTH; // how much darker the gaps between bands are
 
 void main() {
 	// Scale by the longer side so the pattern keeps its proportions on any screen.
@@ -96,8 +99,8 @@ void main() {
 	float bandZone = smoothstep(0.3, 0.6, fbmSmooth(p * 0.8 + 11.0)) * antiAlias;
 	float wave = sin(g * BAND_FREQUENCY) * 0.5 + 0.5;
 	color = mix(color, BAND_LIGHT, pow(wave, 6.0) * 0.55 * bandZone);
-	color *= 1.0 - 0.18 * (1.0 - wave) * bandZone;
-	color *= 0.8 + 0.45 * smoothstep(0.25, 0.75, g);
+	color *= 1.0 - BAND_DEPTH * (1.0 - wave) * bandZone;
+	color *= mix(1.0, 0.8 + 0.45 * smoothstep(0.25, 0.75, g), SHADING);
 
 	// Cobalt: grainy, dark patches where the second warp channel is high.
 	float grain = noise(uv * 500.0);
@@ -115,20 +118,47 @@ void main() {
 	// Mineral speckles and a soft vignette.
 	color += (hash(gl_FragCoord.xy) - 0.5) * 0.02;
 	vec2 centered = gl_FragCoord.xy / resolution - 0.5;
-	color *= 1.0 - 0.35 * dot(centered, centered);
+	color *= 1.0 - VIGNETTE * dot(centered, centered);
 
-	gl_FragColor = vec4(color, 1.0);
+	gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);
 }
 `;
+
+// Dark: matched to the original agate photo. Light: pale stone with grey bands and muted veins.
+const PALETTES = {
+	dark: {
+		BASE: [0.071, 0.075, 0.086],
+		BAND_LIGHT: [0.15, 0.157, 0.165],
+		GOLD: [0.33, 0.225, 0.105],
+		GOLD_LIGHT: [0.56, 0.38, 0.16],
+		COBALT: [0.075, 0.105, 0.215],
+		VIGNETTE: 0.35,
+		SHADING: 1,
+		BAND_DEPTH: 0.18,
+	},
+	light: {
+		BASE: [0.9, 0.89, 0.865],
+		BAND_LIGHT: [0.8, 0.79, 0.77], // on light stone the band lines are darker than the base
+		GOLD: [0.74, 0.62, 0.4],
+		GOLD_LIGHT: [0.6, 0.46, 0.22],
+		COBALT: [0.7, 0.75, 0.86],
+		VIGNETTE: 0.12,
+		SHADING: 0.25,
+		BAND_DEPTH: 0,
+	},
+};
+
+const currentTheme = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
 
 // --- Cache of rendered frames ----------------------------------------------------------
 // Compiling the shader can take a second or more on weaker GPUs, so every rendered frame is
 // stored as an image (Cache Storage). Other pages and later visits show it instantly and
-// never start WebGL. The cache name includes a hash of the shader, so editing it invalidates old frames.
+// never start WebGL. The cache name includes a hash of the shader and palettes, so editing
+// either invalidates old frames; entries are per theme and size.
 
-const CACHE_ENTRIES = 3; // e.g. portrait + landscape on a phone
-const cacheName = `anulab-bg-${hashString(FRAGMENT_SHADER + MAX_PIXEL_RATIO)}`;
-const cacheKey = (width, height) => `/__background/${width}x${height}`;
+const CACHE_ENTRIES = 4; // e.g. both themes × portrait/landscape on a phone
+const cacheName = `anulab-bg-${hashString(FRAGMENT_SHADER + JSON.stringify(PALETTES) + MAX_PIXEL_RATIO)}`;
+const cacheKey = (theme, width, height) => `/__background/${theme}/${width}x${height}`;
 
 function hashString(text) {
 	let hash = 5381;
@@ -136,23 +166,23 @@ function hashString(text) {
 	return (hash >>> 0).toString(36);
 }
 
-async function readCachedFrame(width, height) {
+async function readCachedFrame(key) {
 	try {
-		const response = await (await caches.open(cacheName)).match(cacheKey(width, height));
+		const response = await (await caches.open(cacheName)).match(key);
 		return response ? await response.blob() : null;
 	} catch {
 		return null; // Cache Storage unavailable (e.g. private mode, http://)
 	}
 }
 
-async function storeFrame(blob, width, height) {
+async function storeFrame(blob, key) {
 	try {
-		// Frames from older shader versions are useless.
+		// Frames from older shader/palette versions are useless.
 		for (const name of await caches.keys()) {
 			if (name.startsWith('anulab-bg-') && name !== cacheName) await caches.delete(name);
 		}
 		const cache = await caches.open(cacheName);
-		await cache.put(cacheKey(width, height), new Response(blob, { headers: { 'Content-Type': blob.type } }));
+		await cache.put(key, new Response(blob, { headers: { 'Content-Type': blob.type } }));
 		const keys = await cache.keys();
 		for (const request of keys.slice(0, Math.max(0, keys.length - CACHE_ENTRIES))) await cache.delete(request);
 	} catch {
@@ -169,8 +199,8 @@ function createShader(gl, type, source) {
 	return shader;
 }
 
-// Resolves with a ready-to-draw renderer. With KHR_parallel_shader_compile the browser compiles
-// in the background and the page stays responsive; without it this blocks like a normal compile.
+// Resolves with a draw(width, height, palette) function. With KHR_parallel_shader_compile the
+// browser compiles in the background and the page stays responsive; without it this blocks.
 function createRenderer(canvas) {
 	// alpha: true keeps the canvas transparent (showing the cached frame or CSS fallback) until drawn.
 	const gl = canvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: false, depth: false, powerPreference: 'low-power' });
@@ -200,11 +230,15 @@ function createRenderer(canvas) {
 			const position = gl.getAttribLocation(program, 'position');
 			gl.enableVertexAttribArray(position);
 			gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-			const resolution = gl.getUniformLocation(program, 'resolution');
+			const location = (name) => gl.getUniformLocation(program, name);
 
-			resolve((width, height) => {
+			resolve((width, height, palette) => {
 				gl.viewport(0, 0, width, height);
-				gl.uniform2f(resolution, width, height);
+				gl.uniform2f(location('resolution'), width, height);
+				for (const [name, value] of Object.entries(palette)) {
+					if (Array.isArray(value)) gl.uniform3fv(location(name), value);
+					else gl.uniform1f(location(name), value);
+				}
 				gl.drawArrays(gl.TRIANGLES, 0, 3);
 			});
 		};
@@ -222,7 +256,7 @@ export function initBackground() {
 	if (!canvas) return;
 
 	let renderer = null; // created lazily: not needed at all when the frame comes from the cache
-	let shownSize = '';
+	let shownKey = '';
 	let objectUrl = '';
 
 	const targetSize = () => {
@@ -236,37 +270,44 @@ export function initBackground() {
 		canvas.style.backgroundImage = `url("${objectUrl}")`;
 	};
 
-	const render = async (width, height) => {
+	const render = async (width, height, theme, key) => {
 		renderer ??= createRenderer(canvas);
 		const draw = await renderer;
+		if (key !== shownKey) return; // theme or size changed again while compiling
 		canvas.width = width;
 		canvas.height = height;
-		draw(width, height);
+		draw(width, height, PALETTES[theme]);
 		// The WebGL buffer is only readable in the same task as the draw call.
-		canvas.toBlob((blob) => blob && storeFrame(blob, width, height), 'image/webp', 0.9);
+		canvas.toBlob((blob) => blob && storeFrame(blob, key), 'image/webp', 0.9);
 	};
 
 	const update = async () => {
 		const [width, height] = targetSize();
-		const size = `${width}x${height}`;
+		const theme = currentTheme();
+		const key = cacheKey(theme, width, height);
 		// The canvas is sized to 100lvh, so mobile address-bar changes don't resize it.
-		if (size === shownSize) return;
-		shownSize = size;
+		if (key === shownKey) return;
+		const themeChanged = shownKey !== '' && !shownKey.startsWith(`/__background/${theme}/`);
+		shownKey = key;
 
-		const cached = await readCachedFrame(width, height);
+		const cached = await readCachedFrame(key);
 		if (cached) {
 			showCachedFrame(cached);
 			// Seen before: appear immediately instead of fading in.
-			if (!canvas.classList.contains('is-ready')) canvas.classList.add('is-instant');
+			canvas.classList.add('is-instant');
 			if (renderer) canvas.width = canvas.height = 0; // hide an older WebGL frame
 		} else {
-			await render(width, height);
+			// New theme without a cached frame: fade from the plain theme color, not the old picture.
+			if (themeChanged) canvas.classList.remove('is-ready', 'is-instant');
+			await render(width, height, theme, key);
 		}
 		canvas.classList.add('is-ready');
 	};
 
-	update().catch((error) => console.warn('[background] Using CSS fallback.', error));
-	window.addEventListener('resize', debounce(() => update().catch(() => {}), 200));
+	const safeUpdate = () => update().catch((error) => console.warn('[background] Using CSS fallback.', error));
+	safeUpdate();
+	window.addEventListener('resize', debounce(safeUpdate, 200));
+	document.addEventListener('themechange', safeUpdate);
 
 	// If the GPU drops the context, fall back to the plain CSS background.
 	canvas.addEventListener('webglcontextlost', () => canvas.classList.remove('is-ready'));

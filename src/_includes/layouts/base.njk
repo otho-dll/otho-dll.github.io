@@ -1,18 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	{%- set pageTitle = title if title == site.name else site.name + " • " + title %}
-	{%- set pageDescription = description or site.description %}
-	{%- set socialImage = (image or site.image) | ogImage %}
+	{#- Apply the saved theme (or the system one) before anything is painted. See js/modules/theme.js. #}
+	<script>
+		(() => {
+			let theme = null;
+			try { theme = localStorage.getItem('theme'); } catch {}
+			if (theme !== 'light' && theme !== 'dark') {
+				theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+			}
+			document.documentElement.dataset.theme = theme;
+		})();
+	</script>
+
+	{%- set siteName = settings.site.name %}
+	{%- set pageTitle = title if title == siteName else siteName + " • " + title %}
+	{%- set pageDescription = description or settings.site.description %}
+	{%- set socialImage = (image or settings.site.share_image) | ogImage %}
 	<title>{{ pageTitle }}</title>
 	<meta name="description" content="{{ pageDescription }}">
 	<link rel="canonical" href="{{ page.url | absoluteUrl(site.url) }}">
 
 	<meta property="og:type" content="{{ 'article' if layout == 'post' else 'website' }}">
-	<meta property="og:site_name" content="{{ site.name }}">
+	<meta property="og:site_name" content="{{ siteName }}">
 	<meta property="og:title" content="{{ title }}">
 	<meta property="og:description" content="{{ pageDescription }}">
 	<meta property="og:url" content="{{ page.url | absoluteUrl(site.url) }}">
@@ -26,8 +39,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap">
 
 	<link rel="stylesheet" href="{{ '/css/style.css' | versioned }}">
-	<link rel="stylesheet" href="{{ '/css/partials/header.css' | versioned }}">
-	<link rel="stylesheet" href="{{ '/css/partials/footer.css' | versioned }}">
+	<link rel="stylesheet" href="{{ '/css/partials/chrome.css' | versioned }}">
 	{%- block head %}{% endblock %}
 
 	<script type="module" src="{{ '/js/main.js' | versioned }}"></script>
@@ -37,7 +49,7 @@
 </head>
 <body>
 	<canvas class="page-background" aria-hidden="true"></canvas>
-	{% include "partials/header.njk" %}
+	{% include "partials/site-mark.njk" %}
 	<main class="site-main">
 		{% block content %}{% endblock %}
 	</main>

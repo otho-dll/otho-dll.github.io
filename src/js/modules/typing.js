@@ -19,9 +19,6 @@ export function initTyping() {
 		return;
 	}
 
-	output.classList.add('text-blue');
-	container.querySelector('.cursor')?.classList.add('text-blue');
-
 	if (roles.length < 2 || prefersReducedMotion()) return;
 
 	let roleIndex = 0;

@@ -143,7 +143,7 @@
 
 .post-content h4 {
     margin: 0;
-    color: var(--text-emphasis);
+    color: var(--accent-2);
     font-size: 1rem;
     font-weight: normal;
     font-style: italic;
@@ -164,7 +164,7 @@
 
 .post-content em,
 .post-content i {
-    color: var(--text-italic);
+    color: var(--text);
     font-style: italic;
 }
 
@@ -173,15 +173,15 @@
 .post-content em strong,
 .post-content b i,
 .post-content i b {
-    color: var(--text-emphasis);
-    text-shadow: 0 0 8px color-mix(in srgb, var(--text-emphasis) 40%, transparent);
+    color: var(--accent-2);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--accent-2) 40%, transparent);
 }
 
 .post-content code {
     padding: 0.2rem 0.4rem;
     border: 1px solid var(--border);
     border-radius: 4px;
-    background-color: rgba(20, 20, 20, 0.9);
+    background-color: var(--code-bg);
     color: var(--accent);
     font-family: monospace;
     font-size: 0.9em;
@@ -193,7 +193,7 @@
     overflow-x: auto;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background-color: rgba(10, 10, 10, 0.9);
+    background-color: var(--pre-bg);
 }
 
 .post-content pre code {
@@ -237,7 +237,7 @@
     border: 1px solid var(--border);
     border-radius: 6px;
     border-collapse: collapse;
-    background: rgba(10, 10, 10, 0.4);
+    background: var(--table-bg);
     font-size: 0.95rem;
 }
 
@@ -251,7 +251,7 @@
 }
 
 .post-content th {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--hover-tint);
     color: var(--text);
     font-family: var(--font-pixel);
     font-size: 0.9rem;
@@ -264,7 +264,7 @@
 }
 
 .post-content tbody tr:hover {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--hover-tint);
 }
 
 /* Collapsible table: <details class="custom-table-accordion"> in Markdown. */
@@ -274,7 +274,7 @@
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background: rgba(15, 15, 15, 0.85);
+    background: var(--surface-strong);
 }
 
 .custom-table-accordion + p {
@@ -286,7 +286,7 @@
     align-items: center;
     justify-content: flex-start;
     padding: 1rem 1.5rem;
-    background: rgba(20, 20, 20, 0.9);
+    background: var(--surface-bar);
     color: var(--text);
     font-family: var(--font-pixel);
     font-size: 1rem;
@@ -354,7 +354,7 @@
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background: rgba(20, 20, 20, 0.8);
+    background: var(--surface-embed);
     text-decoration: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
@@ -432,7 +432,7 @@
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background: rgba(15, 15, 15, 0.85);
+    background: var(--surface-strong);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
@@ -452,12 +452,12 @@
 }
 
 .embed-pdf-header:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--hover-tint);
 }
 
 .embed-pdf-wrapper[open] .embed-pdf-header {
     border-bottom: 1px solid var(--border);
-    background: rgba(20, 20, 20, 0.9);
+    background: var(--surface-bar);
 }
 
 .embed-pdf-title {
@@ -516,7 +516,7 @@
 .embed-pdf-body {
     width: 100%;
     height: 600px;
-    background: #222;
+    background: var(--pdf-bg);
 }
 
 .embed-pdf-body iframe {
@@ -554,7 +554,7 @@
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background: rgba(10, 10, 10, 0.4);
+    background: var(--table-bg);
     cursor: zoom-in;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }

@@ -1,6 +1,4 @@
 ---
-layout: post
-tags: ["post"]
 title: "How to setup and use IcePi Zero FPGA"
 date: "2026-07-02"
 description: "A tutorial on setting up IcePi Zero on Windows"

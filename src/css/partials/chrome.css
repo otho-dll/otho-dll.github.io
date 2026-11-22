@@ -1,0 +1,204 @@
+/* Site "chrome" shared by every page: logo mark, theme button and footer (no header bar). */
+
+/* The logo is white with a colored cube; in the light theme invert its lightness but keep the hues. */
+:root[data-theme="light"] .side-logo img,
+:root[data-theme="light"] .top-line-logo img,
+:root[data-theme="light"] .footer-logo img {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* =========================================
+   LOGO ON THE LEFT EDGE (wide screens only)
+   Rotated -90°; the box is 150×48, so after rotation it is shifted left by (150 - 48) / 2.
+========================================= */
+.side-logo {
+    position: fixed;
+    top: 50%;
+    left: calc(14px - 51px);
+    z-index: 10;
+    display: none;
+    width: 150px;
+    opacity: 0.5;
+    transform: translateY(-50%) rotate(-90deg);
+    transition: opacity 0.3s ease;
+}
+
+.side-logo:hover,
+.side-logo:focus-visible {
+    opacity: 0.9;
+}
+
+.side-logo img,
+.top-line-logo img,
+.footer-logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* =========================================
+   TOP LINE (narrower screens): small logo + theme button above the content
+========================================= */
+.top-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.25rem 2rem 0;
+}
+
+.top-line-logo {
+    width: 110px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.top-line-logo:hover,
+.top-line-logo:focus-visible {
+    opacity: 0.9;
+}
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+}
+
+.theme-toggle svg {
+    width: 18px;
+    height: 18px;
+}
+
+.theme-toggle .icon-sun,
+:root[data-theme="light"] .theme-toggle .icon-moon {
+    display: none;
+}
+
+:root[data-theme="light"] .theme-toggle .icon-sun {
+    display: block;
+}
+
+/* Wide enough for a free margin next to the 1200px grid: logo on the edge, button in the corner. */
+@media (min-width: 1360px) {
+    .side-logo {
+        display: block;
+    }
+
+    .top-line {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+        width: auto;
+        padding: 0;
+    }
+
+    .top-line-logo {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-line {
+        padding: 1rem 1rem 0;
+    }
+}
+
+/* =========================================
+   FOOTER: one tile in the page grid
+========================================= */
+.site-footer {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 2rem;
+}
+
+.footer-tile {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 1.25rem 2rem;
+    padding: 1.5rem 1.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-tile);
+    background-color: var(--surface);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.footer-logo {
+    width: 120px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.footer-logo:hover {
+    opacity: 0.9;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem 1.5rem;
+}
+
+.footer-links a {
+    color: var(--text);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--accent-2);
+}
+
+.footer-meta {
+    grid-column: 1 / -1;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    line-height: 1.6;
+}
+
+.footer-meta p {
+    margin: 0;
+}
+
+.heart {
+    color: var(--accent-2);
+}
+
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 0 1rem 1rem;
+    }
+
+    .footer-tile {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+    }
+
+    .footer-links {
+        justify-content: center;
+    }
+}

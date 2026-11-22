@@ -1,6 +1,4 @@
 ---
-layout: post
-tags: ["post"]
 title: "IcePi Zero dev Extension"
 date: "2026-08-13"
 description: "A companion article and a documentation for my extension for IcePi Zero"

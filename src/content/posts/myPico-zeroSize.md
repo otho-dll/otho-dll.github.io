@@ -1,6 +1,4 @@
 ---
-layout: post
-tags: ["post"]
 title: "ANUlab Z-Blade"
 date: "2026-08-30"
 description: "A companion article and a documentation for my custom Pi Pico 2W in a Pi Zero formfactor"
