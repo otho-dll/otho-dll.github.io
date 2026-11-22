@@ -5,6 +5,7 @@ description: "An honest confession on my AI usage"
 image: "/images/blog/miscellaneous/madeByAIXD.png"
 article_tags: ["Blog"]
 hide_image: true
+draft: true
 ---
 
 # Yes, I use Gemini.
