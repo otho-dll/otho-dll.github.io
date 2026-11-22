@@ -56,13 +56,8 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    /* Fallback until (or instead of) the WebGL background: dark stone with faint gold and cobalt. */
-    background:
-        radial-gradient(ellipse at 15% 75%, rgba(120, 80, 30, 0.18), transparent 45%),
-        radial-gradient(ellipse at 85% 60%, rgba(30, 45, 100, 0.22), transparent 50%),
-        radial-gradient(ellipse at 50% 20%, rgba(60, 62, 68, 0.15), transparent 60%),
-        #121316;
-    background-attachment: fixed;
+    /* Shown until (or instead of) the WebGL background: the agate's base color. */
+    background: #121316;
 }
 
 /* Procedural background (js/modules/background.js). Sized to the largest viewport (lvh),
@@ -75,6 +70,8 @@ body {
     width: 100vw;
     height: 100vh;
     height: 100lvh;
+    /* A cached frame is shown as the canvas background (no WebGL needed). */
+    background-size: 100% 100%;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.4s ease;
@@ -82,6 +79,11 @@ body {
 
 .page-background.is-ready {
     opacity: 1;
+}
+
+/* Cached frames appear at once, so navigating between pages doesn't flicker. */
+.page-background.is-instant {
+    transition: none;
 }
 
 .site-main {

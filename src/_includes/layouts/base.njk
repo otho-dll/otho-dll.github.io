@@ -31,6 +31,9 @@
 	{%- block head %}{% endblock %}
 
 	<script type="module" src="{{ '/js/main.js' | versioned }}"></script>
+	{# Fetch the background modules in parallel with main.js instead of after it. #}
+	<link rel="modulepreload" href="/js/modules/background.js">
+	<link rel="modulepreload" href="/js/modules/motion.js">
 </head>
 <body>
 	<canvas class="page-background" aria-hidden="true"></canvas>

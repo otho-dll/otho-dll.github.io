@@ -2,8 +2,8 @@ import { debounce } from './motion.js';
 
 // Procedural "dark agate" page background, drawn once with WebGL into a fixed <canvas>.
 // It replaces a 1.4 MB background image. The canvas is only redrawn when its size changes,
-// so the GPU is idle the rest of the time.
-// Without WebGL the CSS gradient on <body> stays visible (see style.css).
+// so the GPU is idle the rest of the time, and rendered frames are cached (see below).
+// Without WebGL the plain CSS background on <body> stays visible (see style.css).
 
 const MAX_PIXEL_RATIO = 1.5;
 
@@ -42,7 +42,7 @@ const mat2 ROTATE = mat2(0.8, 0.6, -0.6, 0.8);
 float fbm(vec2 p) {
 	float value = 0.0;
 	float amplitude = 0.5;
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 5; i++) {
 		value += amplitude * noise(p);
 		p = ROTATE * p * 2.02 + 17.0;
 		amplitude *= 0.5;
@@ -121,64 +121,153 @@ void main() {
 }
 `;
 
-function compile(gl, type, source) {
+// --- Cache of rendered frames ----------------------------------------------------------
+// Compiling the shader can take a second or more on weaker GPUs, so every rendered frame is
+// stored as an image (Cache Storage). Other pages and later visits show it instantly and
+// never start WebGL. The cache name includes a hash of the shader, so editing it invalidates old frames.
+
+const CACHE_ENTRIES = 3; // e.g. portrait + landscape on a phone
+const cacheName = `anulab-bg-${hashString(FRAGMENT_SHADER + MAX_PIXEL_RATIO)}`;
+const cacheKey = (width, height) => `/__background/${width}x${height}`;
+
+function hashString(text) {
+	let hash = 5381;
+	for (let i = 0; i < text.length; i++) hash = ((hash << 5) + hash + text.charCodeAt(i)) | 0;
+	return (hash >>> 0).toString(36);
+}
+
+async function readCachedFrame(width, height) {
+	try {
+		const response = await (await caches.open(cacheName)).match(cacheKey(width, height));
+		return response ? await response.blob() : null;
+	} catch {
+		return null; // Cache Storage unavailable (e.g. private mode, http://)
+	}
+}
+
+async function storeFrame(blob, width, height) {
+	try {
+		// Frames from older shader versions are useless.
+		for (const name of await caches.keys()) {
+			if (name.startsWith('anulab-bg-') && name !== cacheName) await caches.delete(name);
+		}
+		const cache = await caches.open(cacheName);
+		await cache.put(cacheKey(width, height), new Response(blob, { headers: { 'Content-Type': blob.type } }));
+		const keys = await cache.keys();
+		for (const request of keys.slice(0, Math.max(0, keys.length - CACHE_ENTRIES))) await cache.delete(request);
+	} catch {
+		// Not cached; the shader simply runs again next time.
+	}
+}
+
+// --- WebGL -------------------------------------------------------------------------------
+
+function createShader(gl, type, source) {
 	const shader = gl.createShader(type);
 	gl.shaderSource(shader, source);
 	gl.compileShader(shader);
-	if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-		throw new Error(gl.getShaderInfoLog(shader) || 'Shader compile error');
-	}
 	return shader;
 }
 
+// Resolves with a ready-to-draw renderer. With KHR_parallel_shader_compile the browser compiles
+// in the background and the page stays responsive; without it this blocks like a normal compile.
+function createRenderer(canvas) {
+	// alpha: true keeps the canvas transparent (showing the cached frame or CSS fallback) until drawn.
+	const gl = canvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: false, depth: false, powerPreference: 'low-power' });
+	if (!gl) return Promise.reject(new Error('WebGL unavailable'));
+
+	const vertex = createShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER);
+	const fragment = createShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER);
+	const program = gl.createProgram();
+	gl.attachShader(program, vertex);
+	gl.attachShader(program, fragment);
+	gl.linkProgram(program);
+
+	const parallel = gl.getExtension('KHR_parallel_shader_compile');
+
+	return new Promise((resolve, reject) => {
+		const finish = () => {
+			if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+				const log = gl.getShaderInfoLog(fragment) || gl.getShaderInfoLog(vertex) || gl.getProgramInfoLog(program);
+				reject(new Error(log || 'Shader link error'));
+				return;
+			}
+			gl.useProgram(program);
+
+			// One triangle that covers the whole screen.
+			gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+			const position = gl.getAttribLocation(program, 'position');
+			gl.enableVertexAttribArray(position);
+			gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+			const resolution = gl.getUniformLocation(program, 'resolution');
+
+			resolve((width, height) => {
+				gl.viewport(0, 0, width, height);
+				gl.uniform2f(resolution, width, height);
+				gl.drawArrays(gl.TRIANGLES, 0, 3);
+			});
+		};
+
+		if (!parallel) return finish();
+		const poll = () => (gl.getProgramParameter(program, parallel.COMPLETION_STATUS_KHR) ? finish() : requestAnimationFrame(poll));
+		poll();
+	});
+}
+
+// --- Entry point ---------------------------------------------------------------------------
+
 export function initBackground() {
 	const canvas = document.querySelector('canvas.page-background');
-	const gl = canvas?.getContext('webgl', { antialias: false, alpha: false, depth: false, powerPreference: 'low-power' });
-	if (!canvas || !gl) return;
+	if (!canvas) return;
 
-	let resolutionLocation;
-	try {
-		const program = gl.createProgram();
-		gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERTEX_SHADER));
-		gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER));
-		gl.linkProgram(program);
-		if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program) || 'Link error');
-		gl.useProgram(program);
+	let renderer = null; // created lazily: not needed at all when the frame comes from the cache
+	let shownSize = '';
+	let objectUrl = '';
 
-		// One triangle that covers the whole screen.
-		gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-		const position = gl.getAttribLocation(program, 'position');
-		gl.enableVertexAttribArray(position);
-		gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-
-		resolutionLocation = gl.getUniformLocation(program, 'resolution');
-	} catch (error) {
-		console.warn('[background] WebGL setup failed, using CSS fallback.', error);
-		return;
-	}
-
-	const draw = () => {
+	const targetSize = () => {
 		const ratio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
-		const width = Math.round(canvas.clientWidth * ratio);
-		const height = Math.round(canvas.clientHeight * ratio);
+		return [Math.round(canvas.clientWidth * ratio), Math.round(canvas.clientHeight * ratio)];
+	};
 
-		// The canvas is sized to 100lvh, so mobile address-bar changes don't resize it.
-		if (width === canvas.width && height === canvas.height && canvas.dataset.drawn) return;
+	const showCachedFrame = (blob) => {
+		if (objectUrl) URL.revokeObjectURL(objectUrl);
+		objectUrl = URL.createObjectURL(blob);
+		canvas.style.backgroundImage = `url("${objectUrl}")`;
+	};
 
+	const render = async (width, height) => {
+		renderer ??= createRenderer(canvas);
+		const draw = await renderer;
 		canvas.width = width;
 		canvas.height = height;
-		gl.viewport(0, 0, width, height);
-		gl.uniform2f(resolutionLocation, width, height);
-		gl.drawArrays(gl.TRIANGLES, 0, 3);
+		draw(width, height);
+		// The WebGL buffer is only readable in the same task as the draw call.
+		canvas.toBlob((blob) => blob && storeFrame(blob, width, height), 'image/webp', 0.9);
+	};
 
-		canvas.dataset.drawn = 'true';
+	const update = async () => {
+		const [width, height] = targetSize();
+		const size = `${width}x${height}`;
+		// The canvas is sized to 100lvh, so mobile address-bar changes don't resize it.
+		if (size === shownSize) return;
+		shownSize = size;
+
+		const cached = await readCachedFrame(width, height);
+		if (cached) {
+			showCachedFrame(cached);
+			// Seen before: appear immediately instead of fading in.
+			if (!canvas.classList.contains('is-ready')) canvas.classList.add('is-instant');
+			if (renderer) canvas.width = canvas.height = 0; // hide an older WebGL frame
+		} else {
+			await render(width, height);
+		}
 		canvas.classList.add('is-ready');
 	};
 
-	draw();
-	window.addEventListener('resize', debounce(draw, 200));
+	update().catch((error) => console.warn('[background] Using CSS fallback.', error));
+	window.addEventListener('resize', debounce(() => update().catch(() => {}), 200));
 
-	// If the GPU drops the context, fall back to the CSS gradient.
+	// If the GPU drops the context, fall back to the plain CSS background.
 	canvas.addEventListener('webglcontextlost', () => canvas.classList.remove('is-ready'));
 }
