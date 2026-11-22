@@ -60,6 +60,8 @@
 	<div class="bento">
 
 		<section class="tile bento-hero" id="welcome">
+			{#- Decorative: the logo's cube as a faint watermark, clipped by the tile's corner. #}
+			<img class="hero-watermark" src="{{ settings.site.mark }}" alt="" aria-hidden="true" loading="eager" sizes="340px">
 			<p class="hero-greeting">{{ settings.greeting }}</p>
 			<h1 class="hero-name">{{ settings.name }}</h1>
 			{# Roles are typed out by js/modules/typing.js; the first one is rendered for no-JS visitors. #}

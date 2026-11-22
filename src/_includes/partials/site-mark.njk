@@ -1,12 +1,9 @@
 {#
-	There is no header bar: just a thin line above the content with a small logo and the theme button.
-	The logo has a separate file for the light theme (dark text, same cube); CSS shows the right one.
-	Styles: css/partials/chrome.css
+	There is no header bar. The theme button floats in the top-right corner of the window when there is
+	free space next to the 1200px grid, otherwise it sits above the content. The logo appears as a
+	watermark in the home intro tile and in the footer. Styles: css/partials/chrome.css
 #}
 <div class="top-line">
-	<a class="top-line-logo" href="/" aria-label="{{ settings.site.name }} home">
-		{% include "partials/logo.njk" %}
-	</a>
 	<button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Switch to light theme">
 		{# Moon is shown in the dark theme, sun in the light theme. #}
 		<svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>

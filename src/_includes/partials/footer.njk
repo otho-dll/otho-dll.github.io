@@ -4,16 +4,19 @@
 	<div class="footer-bg-layer layer-2" aria-hidden="true"></div>
 	<div class="footer-bg-layer layer-3" aria-hidden="true"></div>
 
-	<a class="footer-logo" href="/" aria-label="{{ settings.site.name }} home">
-		{% include "partials/logo.njk" %}
-	</a>
+	{# Logo and links share one row (stacked on phones). #}
+	<div class="footer-top">
+		<a class="footer-logo" href="/" aria-label="{{ settings.site.name }} home">
+			{% include "partials/logo.njk" %}
+		</a>
 
-	<ul class="footer-links">
-		<li><a href="/">Home</a></li>
-		<li><a href="/#about">About</a></li>
-		<li><a href="/#contact">{{ settings.social_title }}</a></li>
-		<li><a href="/#projects">{{ settings.maker_log_title }}</a></li>
-	</ul>
+		<ul class="footer-links">
+			<li><a href="/">Home</a></li>
+			<li><a href="/#about">About</a></li>
+			<li><a href="/#contact">{{ settings.social_title }}</a></li>
+			<li><a href="/#projects">{{ settings.maker_log_title }}</a></li>
+		</ul>
+	</div>
 
 	<div class="footer-bottom">
 		<p>Made with <span class="heart" aria-label="love">💛</span> by {{ settings.name }}</p>

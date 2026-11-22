@@ -86,6 +86,29 @@
     flex-direction: column;
     justify-content: center;
     padding: 2.5rem;
+    overflow: hidden;
+}
+
+/* Text sits above the watermark. */
+.bento-hero > :not(.hero-watermark) {
+    position: relative;
+    z-index: 1;
+}
+
+/* The logo's cube, very faint, pushed past the bottom-right corner and clipped by the tile. */
+.hero-watermark {
+    position: absolute;
+    right: -70px;
+    bottom: -90px;
+    width: 340px;
+    opacity: 0.06;
+    transform: rotate(-12deg);
+    pointer-events: none;
+    user-select: none;
+}
+
+:root[data-theme="light"] .hero-watermark {
+    opacity: 0.09;
 }
 
 .hero-greeting {
@@ -580,6 +603,12 @@
 
     .bento-hero {
         padding: 1.75rem;
+    }
+
+    .hero-watermark {
+        right: -45px;
+        bottom: -55px;
+        width: 200px;
     }
 
     .hero-name {

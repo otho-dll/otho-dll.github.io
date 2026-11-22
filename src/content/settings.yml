@@ -14,6 +14,7 @@ site:
   description: "Simon's projects, tutorials and documentation: electronics, PCB design, 3D printing and programming."
   logo: /images/logo.png
   logo_light: /images/logo-light.png   # same logo with dark text, used in the light theme
+  mark: /images/logo-mark.png          # just the cube; faint watermark in the intro tile
   # Preview image for shared links when a page has no image of its own.
   share_image: /images/logo.png
 

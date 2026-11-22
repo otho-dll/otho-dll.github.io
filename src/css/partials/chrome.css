@@ -1,5 +1,5 @@
-/* Shared by every page: the thin line above the content (small logo + theme button)
-   and the logo variant switch. There is no header bar. Footer styles: footer.css. */
+/* Shared by every page: the theme button and the logo variant switch.
+   There is no header bar. Footer styles: footer.css. */
 
 /* =========================================
    LOGO: one file per theme (the light one has dark text, same cube)
@@ -13,34 +13,23 @@
     display: block;
 }
 
-.top-line-logo img,
 .footer-logo img {
     width: 100%;
     height: auto;
 }
 
 /* =========================================
-   TOP LINE
+   THEME BUTTON
+   Above the content on narrower screens; floating in the window corner once there is
+   free space next to the 1200px grid (see the media query below).
 ========================================= */
 .top-line {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 1.25rem 2rem 0;
-}
-
-.top-line-logo {
-    width: 110px;
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-}
-
-.top-line-logo:hover,
-.top-line-logo:focus-visible {
-    opacity: 0.9;
 }
 
 .theme-toggle {
@@ -76,6 +65,17 @@
 
 :root[data-theme="light"] .theme-toggle .icon-sun {
     display: block;
+}
+
+@media (min-width: 1300px) {
+    .top-line {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+        width: auto;
+        padding: 0;
+    }
 }
 
 @media (max-width: 768px) {
