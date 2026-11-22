@@ -1,0 +1,20 @@
+{# Shared hero for the redesign mockups: name first, typed role, one-line intro, socials under it. #}
+<div class="mk-hero">
+	<p class="mk-greeting">{{ home.greeting }}</p>
+	<h1 class="mk-name">{{ home.name }}</h1>
+	<p class="hero-role" data-roles="{{ home.roles | dump }}">
+		<span class="typing-text">{{ home.roles[0] }}</span><span class="cursor" aria-hidden="true">|</span>
+	</p>
+	<p class="mk-intro">{{ home.intro }}</p>
+	<div class="mk-actions">
+		<a class="mk-btn mk-btn--solid" href="#projects">Projects <span aria-hidden="true">↓</span></a>
+		<a class="mk-btn" href="/blog/">Blog <span aria-hidden="true">→</span></a>
+		<span class="mk-socials">
+			{%- for link in social %}
+			<a class="mk-social" href="{{ link.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ link.name }}">
+				<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="{{ link.icon_path }}"/></svg>
+			</a>
+			{%- endfor %}
+		</span>
+	</div>
+</div>

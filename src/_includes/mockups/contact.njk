@@ -1,0 +1,18 @@
+{# Clickable contact options: links open (mailto:), copyable values copy (js/modules/copy.js). #}
+<div class="mk-contact">
+	{%- for option in home.contact.options %}
+	{%- if option.href %}
+	<a class="mk-contact-btn" href="{{ option.href }}">
+		<span class="mk-contact-label">{{ option.label }}</span>
+		<span>{{ option.value }}</span>
+		<span class="mk-contact-hint" aria-hidden="true">↗</span>
+	</a>
+	{%- else %}
+	<button type="button" class="mk-contact-btn" data-copy="{{ option.value }}" aria-label="Copy {{ option.label }} username {{ option.value }}">
+		<span class="mk-contact-label">{{ option.label }}</span>
+		<span data-copy-label>{{ option.value }}</span>
+		<span class="mk-contact-hint" aria-hidden="true">copy</span>
+	</button>
+	{%- endif %}
+	{%- endfor %}
+</div>

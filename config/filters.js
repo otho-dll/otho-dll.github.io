@@ -26,4 +26,7 @@ export default function filters(eleventyConfig) {
 	eleventyConfig.on('eleventy.before', () => hashCache.clear());
 
 	eleventyConfig.addFilter('absoluteUrl', (url, base) => new URL(url, base).href);
+
+	// Drop drafts (they exist only while running `npm start`).
+	eleventyConfig.addFilter('published', (items) => items.filter((item) => !item.data.draft));
 }
