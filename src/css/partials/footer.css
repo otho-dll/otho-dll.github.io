@@ -1,0 +1,157 @@
+/* Site footer with three animated "crystal" layers along its top edge. */
+
+.siteFooter {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: auto;
+    padding: 10rem 2rem 2rem;
+    overflow: hidden;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: var(--font-main);
+}
+
+/* =========================================
+   BACKGROUND LAYERS
+   Each layer's top edge is a polygon that slowly morphs between two shapes.
+   Colors: --footer-layer-1/2/3 (style.css), different per theme.
+========================================= */
+.footer-bg-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.layer-1 {
+    background-color: var(--footer-layer-1);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    animation: crystalLayer1 8s ease-in-out infinite alternate;
+}
+
+.layer-2 {
+    background-color: var(--footer-layer-2);
+    animation: crystalLayer2 6s ease-in-out infinite alternate;
+}
+
+.layer-3 {
+    background-color: var(--footer-layer-3);
+    animation: crystalLayer3 4s ease-in-out infinite alternate;
+}
+
+@keyframes crystalLayer1 {
+    0% { clip-path: polygon(0% 4vw, 20% 0vw, 45% 5vw, 75% 1vw, 100% 3vw, 100% 100%, 0% 100%); }
+    100% { clip-path: polygon(0% 1vw, 30% 6vw, 60% 1vw, 85% 5vw, 100% 2vw, 100% 100%, 0% 100%); }
+}
+
+@keyframes crystalLayer2 {
+    0% { clip-path: polygon(0% 6vw, 25% 3vw, 55% 8vw, 80% 4vw, 100% 7vw, 100% 100%, 0% 100%); }
+    100% { clip-path: polygon(0% 4vw, 35% 7vw, 50% 3vw, 70% 8vw, 100% 4vw, 100% 100%, 0% 100%); }
+}
+
+@keyframes crystalLayer3 {
+    0% { clip-path: polygon(0% 9vw, 30% 5vw, 50% 10vw, 70% 6vw, 100% 8vw, 100% 100%, 0% 100%); }
+    100% { clip-path: polygon(0% 7vw, 20% 9vw, 45% 6vw, 75% 10vw, 100% 6vw, 100% 100%, 0% 100%); }
+}
+
+/* =========================================
+   CONTENT
+========================================= */
+.footer-logo,
+.footer-links,
+.footer-bottom {
+    position: relative;
+    z-index: 2;
+}
+
+.footer-logo {
+    width: 110px;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.footer-logo:hover,
+.footer-logo:focus-visible {
+    opacity: 0.9;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 0 0 2rem;
+    padding: 0;
+    list-style: none;
+}
+
+.footer-links a {
+    color: var(--text);
+    font-size: var(--fs-base);
+    font-weight: var(--fw-light);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--accent-2);
+    font-weight: var(--fw-regular);
+}
+
+.footer-bottom {
+    width: 100%;
+    max-width: 800px;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.footer-bottom p {
+    margin: 0;
+}
+
+.heart {
+    color: var(--accent-2);
+}
+
+/* =========================================
+   RESPONSIVE
+   On narrow screens vw-based edges get too flat, so pixel values are used instead.
+========================================= */
+@media (max-width: 768px) {
+    .siteFooter {
+        padding-top: 7rem;
+    }
+
+    .layer-1 { animation-name: crystalMobile1; }
+    .layer-2 { animation-name: crystalMobile2; }
+    .layer-3 { animation-name: crystalMobile3; }
+}
+
+@keyframes crystalMobile1 {
+    0% { clip-path: polygon(0% 30px, 30% 10px, 60% 35px, 100% 15px, 100% 100%, 0% 100%); }
+    100% { clip-path: polygon(0% 15px, 40% 40px, 70% 15px, 100% 30px, 100% 100%, 0% 100%); }
+}
+
+@keyframes crystalMobile2 {
+    0% { clip-path: polygon(0% 45px, 35% 25px, 65% 50px, 100% 30px, 100% 100%, 0% 100%); }
+    100% { clip-path: polygon(0% 30px, 25% 45px, 55% 25px, 100% 45px, 100% 100%, 0% 100%); }
+}
+
+@keyframes crystalMobile3 {
+    0% { clip-path: polygon(0% 60px, 25% 45px, 50% 65px, 75% 50px, 100% 55px, 100% 100%, 0% 100%); }
+    100% { clip-path: polygon(0% 50px, 35% 60px, 60% 45px, 100% 60px, 100% 100%, 0% 100%); }
+}
+
+/* Keep the crystal edge, just stop it from moving. */
+@media (prefers-reduced-motion: reduce) {
+    .footer-bg-layer {
+        animation-play-state: paused;
+    }
+}

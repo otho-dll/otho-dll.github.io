@@ -1,0 +1,11 @@
+{#
+	Project status badge. Expects `statusKey` (a name from `statuses` in src/content/settings.yml).
+	An unknown name is still shown, as plain text with a grey dot.
+#}
+{%- if statusKey %}
+{#- Inside a macro `settings` isn't visible, so the caller passes `statusList` instead. #}
+{%- set statusInfo = (statusList or settings.statuses)[statusKey] %}
+<span class="status-badge" style="--status-color: {{ statusInfo.color if statusInfo else '#9aa3ad' }};">
+	<span class="status-dot" aria-hidden="true"></span>{{ statusInfo.label if statusInfo else statusKey }}
+</span>
+{%- endif %}

@@ -12,7 +12,7 @@
     --page-bg: #121316;          /* shown until the WebGL background is ready */
 
     --accent: #0f49be;           /* main blue */
-    --accent-2: #d6c78f;         /* washed-out yellow, used sparingly */
+    --accent-2: #d9a64a;         /* amber, like the veins in the background (override: settings.yml) */
 
     --text: #ffffff;
     --text-muted: #cccccc;
@@ -30,6 +30,10 @@
     --pdf-bg: #222;
     --hover-tint: rgba(255, 255, 255, 0.03);
     --border: rgba(255, 255, 255, 0.15);
+
+    --footer-layer-1: rgba(30, 30, 30, 0.4);  /* animated footer edges, back to front */
+    --footer-layer-2: rgba(25, 25, 25, 0.8);
+    --footer-layer-3: rgba(20, 20, 20, 0.9);
 }
 
 :root[data-theme="light"] {
@@ -38,7 +42,7 @@
     --page-bg: #e6e3dc;
 
     --accent: #0f49be;
-    --accent-2: #8a7428;         /* darker on light backgrounds for contrast */
+    --accent-2: #8a5f12;         /* darker amber on light backgrounds for contrast */
 
     --text: #16181d;
     --text-muted: #474c56;
@@ -56,6 +60,10 @@
     --pdf-bg: #d9d9d9;
     --hover-tint: rgba(0, 0, 0, 0.035);
     --border: rgba(0, 0, 0, 0.14);
+
+    --footer-layer-1: rgba(255, 255, 255, 0.35);
+    --footer-layer-2: rgba(240, 238, 233, 0.8);
+    --footer-layer-3: rgba(232, 229, 222, 0.95);
 }
 
 :root {

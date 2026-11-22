@@ -6,6 +6,7 @@ description: ""
 image: "/images/projects/<name>.jpg"
 date: YYYY-MM-DD                    # position in the Maker log; without it the project is under "Earlier"
 article_tags: ["Tag", "Another"]    # shown as tags in the Maker log
+status: ""                          # optional badge: a name from `statuses` in settings.yml (on-hold, working-on, finished)
 link: ""                            # URL, or a blog post address like "/blog/my-post/"
 show_link: false                    # true = show the link in the Maker log entry
 # If `link` points to a blog post, the project and the post become ONE Maker log entry

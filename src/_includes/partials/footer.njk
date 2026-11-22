@@ -1,22 +1,25 @@
-{# Footer: one tile in the same grid width as the page. Texts come from settings.yml (footer). #}
-<footer class="site-footer">
-	<div class="footer-tile">
-		<a class="footer-logo" href="/" aria-label="{{ settings.site.name }} home">
-			<img src="{{ settings.site.logo }}" alt="" sizes="120px">
-		</a>
+{# Footer with three animated "crystal" layers along its top edge. Texts come from settings.yml. #}
+<footer class="siteFooter">
+	<div class="footer-bg-layer layer-1" aria-hidden="true"></div>
+	<div class="footer-bg-layer layer-2" aria-hidden="true"></div>
+	<div class="footer-bg-layer layer-3" aria-hidden="true"></div>
 
-		<nav class="footer-links" aria-label="Footer">
-			<a href="/">Home</a>
-			<a href="/#about">About</a>
-			<a href="/#contact">{{ settings.social_title }}</a>
-			<a href="/#projects">{{ settings.maker_log_title }}</a>
-		</nav>
+	<a class="footer-logo" href="/" aria-label="{{ settings.site.name }} home">
+		{% include "partials/logo.njk" %}
+	</a>
 
-		<div class="footer-meta">
-			<p>Made with <span class="heart" aria-label="love">💛</span> by {{ settings.name }} · &copy; {{ settings.footer.since }}–{{ site.year }} {{ settings.footer.owner }}</p>
-			{%- for note in settings.footer.notes %}
-			<p>{{ note }}</p>
-			{%- endfor %}
-		</div>
+	<ul class="footer-links">
+		<li><a href="/">Home</a></li>
+		<li><a href="/#about">About</a></li>
+		<li><a href="/#contact">{{ settings.social_title }}</a></li>
+		<li><a href="/#projects">{{ settings.maker_log_title }}</a></li>
+	</ul>
+
+	<div class="footer-bottom">
+		<p>Made with <span class="heart" aria-label="love">💛</span> by {{ settings.name }}</p>
+		<p>Copyright &copy; {{ settings.footer.since }}-{{ site.year }} {{ settings.footer.owner }}</p>
+		{%- for note in settings.footer.notes %}
+		<p>{{ note }}</p>
+		{%- endfor %}
 	</div>
 </footer>

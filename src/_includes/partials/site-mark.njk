@@ -1,17 +1,11 @@
 {#
-	There is no header bar. Instead:
-	- wide screens: the logo sits rotated against the left edge of the window (.side-logo),
-	  and the theme button floats in the top-right corner;
-	- narrower screens: a thin line above the content with a small logo and the theme button.
+	There is no header bar: just a thin line above the content with a small logo and the theme button.
+	The logo has a separate file for the light theme (dark text, same cube); CSS shows the right one.
 	Styles: css/partials/chrome.css
 #}
-<a class="side-logo" href="/" aria-label="{{ settings.site.name }} home">
-	<img src="{{ settings.site.logo }}" alt="" width="150" height="48" loading="eager" sizes="150px">
-</a>
-
 <div class="top-line">
 	<a class="top-line-logo" href="/" aria-label="{{ settings.site.name }} home">
-		<img src="{{ settings.site.logo }}" alt="" width="110" height="35" loading="eager" sizes="110px">
+		{% include "partials/logo.njk" %}
 	</a>
 	<button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" aria-label="Switch to light theme">
 		{# Moon is shown in the dark theme, sun in the light theme. #}

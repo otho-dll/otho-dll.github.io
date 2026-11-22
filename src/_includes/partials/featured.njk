@@ -12,7 +12,11 @@
 	</div>
 	{%- endif %}
 	<div class="featured-body">
-		<p class="featured-label">{{ f.label }}</p>
+		<div class="featured-top">
+			<p class="featured-label">{{ f.label }}</p>
+			{%- set statusKey = f.status %}
+			{% include "partials/status.njk" %}
+		</div>
 		<h2 class="featured-title">{{ f.title }}</h2>
 		{%- if f.tagline %}<p class="featured-tagline">{{ f.tagline }}</p>{% endif %}
 		{%- if f.text %}<p class="featured-text">{{ f.text }}</p>{% endif %}

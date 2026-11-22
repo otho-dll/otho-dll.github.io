@@ -254,8 +254,20 @@
     filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
 }
 
+.featured-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.featured--compact .featured-top {
+    justify-content: center;
+}
+
 .featured-label {
-    margin: 0 0 0.75rem;
+    margin: 0;
     color: var(--featured-accent-2);
     font-family: var(--font-pixel);
     font-size: 0.65rem;
@@ -313,6 +325,36 @@
 .featured--compact .featured-title { font-size: 1.15rem; }
 .featured--compact .featured-tagline { font-size: 0.95rem; }
 .featured--compact .featured-text { margin-bottom: 1rem; }
+
+/* =========================================
+   PROJECT STATUS BADGE (partials/status.njk; statuses are defined in settings.yml)
+========================================= */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 3px 10px 3px 8px;
+    border: 1px solid color-mix(in srgb, var(--status-color) 60%, transparent);
+    border-radius: 50px;
+    background: color-mix(in srgb, var(--status-color) 16%, transparent);
+    color: inherit;
+    font-size: 0.75rem;
+    font-weight: var(--fw-semi);
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--status-color);
+    box-shadow: 0 0 6px var(--status-color);
+}
+
+.featured .status-badge {
+    font-size: 0.8rem;
+}
 
 /* =========================================
    MAKER LOG

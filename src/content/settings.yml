@@ -13,8 +13,29 @@ site:
   name: ANUlab
   description: "Simon's projects, tutorials and documentation: electronics, PCB design, 3D printing and programming."
   logo: /images/logo.png
+  logo_light: /images/logo-light.png   # same logo with dark text, used in the light theme
   # Preview image for shared links when a page has no image of its own.
   share_image: /images/logo.png
+
+# Second accent color (headings, dates, tags) next to the main blue. One value per theme;
+# the light theme needs a darker shade to stay readable.
+theme:
+  accent_2_dark: "#d9a64a"
+  accent_2_light: "#8a5f12"
+
+# ── Project statuses ─────────────────────────────────────────────────────────
+# Shown as a badge on the featured project (featured.status below) and on projects
+# in the Maker log (`status:` in the project's .md file). Add your own here.
+statuses:
+  on-hold:
+    label: Project on hold
+    color: "#9aa3ad"
+  working-on:
+    label: Working on it
+    color: "#5fbf86"
+  finished:
+    label: Finished
+    color: "#5b8def"
 
 # ── Home page: intro tile ────────────────────────────────────────────────────
 greeting: "Hi, I'm"
@@ -70,6 +91,8 @@ featured:
   # compact = small tile next to the two About tiles
   layout: wide
   label: Featured project
+  # One of the names under `statuses` above (e.g. on-hold, working-on, finished); leave empty for none.
+  status: on-hold
   title: Tycho Project
   tagline: Carry less. Create more.
   text: "Engineered by Simon."

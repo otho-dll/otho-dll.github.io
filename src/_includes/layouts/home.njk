@@ -6,7 +6,7 @@
 {% endblock %}
 
 {#- One Maker log entry: a post, a project, or a project together with its write-up post. -#}
-{% macro logEntry(entry) %}
+{% macro logEntry(entry, statusList) %}
 	{%- set item = entry.item %}
 	{%- if entry.type == 'post' %}
 		{%- set url = item.url %}{% set linkText = 'Read →' %}{% set external = false %}
@@ -33,6 +33,7 @@
 					{%- if entry.type == 'post' %}<span class="log-type log-type--post">Post</span>
 					{%- else %}<span class="log-type log-type--project">Project</span>{% if entry.post %}<span class="log-type log-type--post">Post</span>{% endif %}
 					{%- endif %}
+					{%- if entry.type == 'project' %}{% set statusKey = item.data.status %}{% include "partials/status.njk" %}{% endif %}
 					{%- if entry.date %}<span class="log-date-inline">{{ entry.date | readableDate }}</span>{% endif %}
 				</p>
 				<h4>{{ item.data.title }}</h4>
@@ -128,7 +129,7 @@
 			<div class="log-panel" role="tabpanel" id="log-{{ group.year }}" aria-labelledby="log-tab-{{ group.year }}">
 				<h3 class="log-year">{{ group.year }}</h3>
 				{%- for entry in group.entries %}
-				{{ logEntry(entry) }}
+				{{ logEntry(entry, settings.statuses) }}
 				{%- endfor %}
 			</div>
 			{%- endfor %}
@@ -137,7 +138,7 @@
 			<div class="log-panel" role="tabpanel" id="log-earlier" aria-labelledby="log-tab-earlier">
 				<h3 class="log-year">Earlier</h3>
 				{%- for project in log.undated %}
-				{{ logEntry({ type: 'project', item: project }) }}
+				{{ logEntry({ type: 'project', item: project }, settings.statuses) }}
 				{%- endfor %}
 			</div>
 			{%- endif %}

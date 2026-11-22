@@ -40,6 +40,14 @@
 
 	<link rel="stylesheet" href="{{ '/css/style.css' | versioned }}">
 	<link rel="stylesheet" href="{{ '/css/partials/chrome.css' | versioned }}">
+	<link rel="stylesheet" href="{{ '/css/partials/footer.css' | versioned }}">
+	{#- Second accent color from settings.yml (theme:), so it can be changed without touching CSS. #}
+	{%- if settings.theme %}
+	<style>
+		:root, :root[data-theme="dark"] { --accent-2: {{ settings.theme.accent_2_dark }}; }
+		:root[data-theme="light"] { --accent-2: {{ settings.theme.accent_2_light }}; }
+	</style>
+	{%- endif %}
 	{%- block head %}{% endblock %}
 
 	<script type="module" src="{{ '/js/main.js' | versioned }}"></script>
