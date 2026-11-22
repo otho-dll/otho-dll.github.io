@@ -150,11 +150,12 @@
 }
 
 .hero-intro {
-    max-width: 34em;
     margin: 0 0 1.5rem;
     color: var(--text-muted);
     font-size: 1.1rem;
     line-height: 1.6;
+    /* Avoid leaving a single word alone on the last line. */
+    text-wrap: pretty;
 }
 
 /* The intro text sets the row height; the photo fills it without making the row taller. */
