@@ -10,7 +10,6 @@ export default function (eleventyConfig) {
 	// Images referenced from <img> are handled by the image pipeline (config/images.js),
 	// so only files used outside of <img> tags are copied as-is.
 	eleventyConfig.addPassthroughCopy('src/images/favicon.png');
-	eleventyConfig.addPassthroughCopy('src/images/bg.png');
 	eleventyConfig.addPassthroughCopy('src/blog/data');
 	eleventyConfig.addPassthroughCopy('src/css');
 	eleventyConfig.addPassthroughCopy('src/js');

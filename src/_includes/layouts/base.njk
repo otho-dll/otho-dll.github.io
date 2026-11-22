@@ -33,6 +33,7 @@
 	<script type="module" src="{{ '/js/main.js' | versioned }}"></script>
 </head>
 <body>
+	<canvas class="page-background" aria-hidden="true"></canvas>
 	{% include "partials/header.njk" %}
 	<main class="site-main">
 		{% block content %}{% endblock %}

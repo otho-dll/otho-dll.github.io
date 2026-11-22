@@ -73,12 +73,32 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-image: url('/images/bg.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed; 
-    background-color: var(--color-bg-dark);
+    /* Fallback until (or instead of) the WebGL background: dark stone with faint gold and cobalt. */
+    background:
+        radial-gradient(ellipse at 15% 75%, rgba(120, 80, 30, 0.18), transparent 45%),
+        radial-gradient(ellipse at 85% 60%, rgba(30, 45, 100, 0.22), transparent 50%),
+        radial-gradient(ellipse at 50% 20%, rgba(60, 62, 68, 0.15), transparent 60%),
+        #121316;
+    background-attachment: fixed;
+}
+
+/* Procedural background (js/modules/background.js). Sized to the largest viewport (lvh),
+   so showing/hiding the mobile address bar doesn't trigger a redraw. */
+.page-background {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    height: 100lvh;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.page-background.is-ready {
+    opacity: 1;
 }
 
 .site-main {
