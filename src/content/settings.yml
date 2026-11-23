@@ -29,14 +29,14 @@ theme:
 # in the Maker log (`status:` in the project's .md file). Add your own here.
 statuses:
   on-hold:
-    label: Project on hold
-    color: "#9aa3ad"
+    label: On hold
+    color: "#ff594c"
   working-on:
     label: Working on it
-    color: "#5fbf86"
+    color: "#5b8def" 
   finished:
     label: Finished
-    color: "#5b8def"
+    color: "#5fbf86"
 
 # ── Home page: intro tile ────────────────────────────────────────────────────
 greeting: "Hi, I'm"
