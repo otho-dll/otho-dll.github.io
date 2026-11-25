@@ -59,14 +59,6 @@
     line-height: 1.6;
 }
 
-/* Long descriptions are cut to three lines. */
-.clamp {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-}
-
 .arrow-link {
     color: var(--accent);
     font-weight: var(--fw-semi);
@@ -676,9 +668,9 @@
    RESPONSIVE
 ========================================= */
 @media (max-width: 1024px) {
-    .bento-hero,
-    .bento-photo { grid-column: span 12; }
-    .bento-photo { height: 420px; }
+    /* Portrait photo stays beside the intro; a full-width strip would crop it badly. */
+    .bento-hero  { grid-column: span 7; }
+    .bento-photo { grid-column: span 5; }
     .bento-about,
     .featured-is-compact .bento-about { grid-column: span 6; }
 
@@ -701,9 +693,20 @@
     .bento-about,
     .featured-is-compact .bento-about { grid-column: span 12; }
 
+    .bento-hero,
+    .bento-photo { grid-column: span 12; }
+
     .bento-hero {
         padding: 1.75rem;
     }
+
+    /* Full width below the intro, kept portrait so the face and the robodog both fit. */
+    .bento-photo {
+        aspect-ratio: 4 / 5;
+        min-height: 0;
+    }
+
+    .bento-photo img { object-position: center 25%; }
 
     .hero-watermark {
         right: -45px;

@@ -129,8 +129,10 @@ body {
     width: 100vw;
     height: 100vh;
     height: 100lvh;
-    /* A cached frame is shown as the canvas background (no WebGL needed). */
-    background-size: 100% 100%;
+    /* A cached frame is shown as the canvas background (no WebGL needed); cover, because
+       a placeholder frame may have a slightly different shape. */
+    background-size: cover;
+    background-position: center;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.4s ease;

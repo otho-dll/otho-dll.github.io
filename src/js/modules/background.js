@@ -6,6 +6,8 @@ import { debounce } from './motion.js';
 // Without WebGL the plain CSS background on <body> stays visible (see style.css).
 
 const MAX_PIXEL_RATIO = 1.5;
+// Frame sizes are rounded to this grid, so slightly different windows share one cached frame.
+const SIZE_STEP = 64;
 
 const VERTEX_SHADER = `
 attribute vec2 position;
@@ -156,7 +158,7 @@ const currentTheme = () => (document.documentElement.dataset.theme === 'light' ?
 // never start WebGL. The cache name includes a hash of the shader and palettes, so editing
 // either invalidates old frames; entries are per theme and size.
 
-const CACHE_ENTRIES = 4; // e.g. both themes × portrait/landscape on a phone
+const CACHE_ENTRIES = 8; // both themes × a few window sizes / orientations
 const cacheName = `anulab-bg-${hashString(FRAGMENT_SHADER + JSON.stringify(PALETTES) + MAX_PIXEL_RATIO)}`;
 const cacheKey = (theme, width, height) => `/__background/${theme}/${width}x${height}`;
 
@@ -172,6 +174,29 @@ async function readCachedFrame(key) {
 		return response ? await response.blob() : null;
 	} catch {
 		return null; // Cache Storage unavailable (e.g. private mode, http://)
+	}
+}
+
+// Any cached frame of this theme, the closest in shape first. Shown (stretched by
+// background-size: cover) while the exact frame renders, instead of a blank background.
+async function readPlaceholderFrame(theme, width, height) {
+	try {
+		const cache = await caches.open(cacheName);
+		const prefix = `/__background/${theme}/`;
+		let best = null;
+		let bestDistance = Infinity;
+		for (const request of await cache.keys()) {
+			const path = new URL(request.url).pathname;
+			if (!path.startsWith(prefix)) continue;
+			const [w, h] = path.slice(prefix.length).split('x').map(Number);
+			if (!w || !h) continue;
+			const distance = Math.abs(Math.log((w / h) / (width / height)));
+			if (distance < bestDistance) [best, bestDistance] = [request, distance];
+		}
+		const response = best && (await cache.match(best));
+		return response ? await response.blob() : null;
+	} catch {
+		return null;
 	}
 }
 
@@ -249,6 +274,8 @@ function createRenderer(canvas) {
 	});
 }
 
+const whenIdle = (fn) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 3000 }) : setTimeout(fn, 500));
+
 // --- Entry point ---------------------------------------------------------------------------
 
 export function initBackground() {
@@ -261,7 +288,8 @@ export function initBackground() {
 
 	const targetSize = () => {
 		const ratio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
-		return [Math.round(canvas.clientWidth * ratio), Math.round(canvas.clientHeight * ratio)];
+		const snap = (size) => Math.max(SIZE_STEP, Math.round((size * ratio) / SIZE_STEP) * SIZE_STEP);
+		return [snap(canvas.clientWidth), snap(canvas.clientHeight)];
 	};
 
 	const showCachedFrame = (blob) => {
@@ -279,6 +307,19 @@ export function initBackground() {
 		draw(width, height, PALETTES[theme]);
 		// The WebGL buffer is only readable in the same task as the draw call.
 		canvas.toBlob((blob) => blob && storeFrame(blob, key), 'image/webp', 0.9);
+		whenIdle(() => prerenderOtherTheme(draw, width, height, theme, key));
+	};
+
+	// The shader is compiled now, so the other theme costs one cheap draw: cache it so that
+	// toggling the theme later is instant. Drawn and restored within one task, so it never shows.
+	const prerenderOtherTheme = async (draw, width, height, theme, key) => {
+		const other = theme === 'light' ? 'dark' : 'light';
+		const otherKey = cacheKey(other, width, height);
+		if (key !== shownKey || (await readCachedFrame(otherKey))) return;
+		if (key !== shownKey || canvas.width !== width || canvas.height !== height) return;
+		draw(width, height, PALETTES[other]);
+		canvas.toBlob((blob) => blob && storeFrame(blob, otherKey), 'image/webp', 0.9);
+		draw(width, height, PALETTES[theme]);
 	};
 
 	const update = async () => {
@@ -297,8 +338,17 @@ export function initBackground() {
 			canvas.classList.add('is-instant');
 			if (renderer) canvas.width = canvas.height = 0; // hide an older WebGL frame
 		} else {
-			// New theme without a cached frame: fade from the plain theme color, not the old picture.
-			if (themeChanged) canvas.classList.remove('is-ready', 'is-instant');
+			const placeholder = await readPlaceholderFrame(theme, width, height);
+			if (key !== shownKey) return;
+			if (placeholder) {
+				// A frame of another size: show it now, the exact one replaces it once rendered.
+				showCachedFrame(placeholder);
+				canvas.classList.add('is-ready', 'is-instant');
+				if (renderer) canvas.width = canvas.height = 0;
+			} else if (themeChanged) {
+				// New theme without any cached frame: fade from the plain theme color, not the old picture.
+				canvas.classList.remove('is-ready', 'is-instant');
+			}
 			await render(width, height, theme, key);
 		}
 		canvas.classList.add('is-ready');
